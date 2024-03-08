@@ -1,4 +1,6 @@
+import { Album } from 'src/models/Album';
 import { Artist } from 'src/models/Artist';
+import { Track } from 'src/models/Track';
 import { User } from 'src/models/User';
 import { EDBEntryNames } from 'src/types';
 
@@ -12,4 +14,6 @@ export const MESSAGES = {
 export const MODELS = {
   [EDBEntryNames.USERS]: User,
   [EDBEntryNames.ARTISTS]: Artist,
+  [EDBEntryNames.ALBUMS]: Album,
+  [EDBEntryNames.TRACKS]: Track,
 };

@@ -1,3 +1,4 @@
+import { ICreateAlbumDTO } from 'src/types';
 import { generateUUID } from 'src/utils';
 
 export class Album {
@@ -6,7 +7,7 @@ export class Album {
   public year: number;
   public artistId: string | null;
 
-  constructor(name: string, year: number, artistId: string) {
+  constructor({ name, year, artistId }: ICreateAlbumDTO) {
     this.id = generateUUID();
     this.name = name;
     this.year = year;

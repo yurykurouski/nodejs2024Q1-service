@@ -1,3 +1,4 @@
+import { ICreateArtistDTO } from 'src/types';
 import { generateUUID } from 'src/utils';
 
 export class Artist {
@@ -5,10 +6,10 @@ export class Artist {
   public name: string;
   public grammy: boolean;
 
-  constructor(name: string) {
+  constructor({ name, grammy }: ICreateArtistDTO) {
     this.id = generateUUID();
     this.name = name;
-    this.grammy = false;
+    this.grammy = grammy;
   }
 
   public updateArtistInfo({ name, grammy }) {

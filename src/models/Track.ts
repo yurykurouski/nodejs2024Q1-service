@@ -1,3 +1,4 @@
+import { ICreateTrackDTO } from 'src/types';
 import { generateUUID } from 'src/utils';
 
 export class Track {
@@ -7,12 +8,7 @@ export class Track {
   public albumId: string | null;
   public duration: number;
 
-  constructor(
-    name: string,
-    artistId: string,
-    albumId: string,
-    duration: number,
-  ) {
+  constructor({ name, artistId, albumId, duration }: ICreateTrackDTO) {
     this.id = generateUUID();
     this.name = name;
     this.artistId = artistId;
