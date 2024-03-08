@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MESSAGES, MODELS } from 'src/constants';
+import { BaseDTO } from 'src/dto';
 import { Album } from 'src/models/Album';
 import { Artist } from 'src/models/Artist';
+import { Favorite } from 'src/models/Favorite';
 import { Track } from 'src/models/Track';
 import { User } from 'src/models/User';
 import { EDBEntryNames, TModelType } from 'src/types';
@@ -12,12 +14,14 @@ export class DbService {
   private _artists: Artist[];
   private _tracks: Track[];
   private _albums: Album[];
+  private _favorites: Favorite[];
 
   constructor() {
     this._users = [];
     this._artists = [];
     this._tracks = [];
     this._albums = [];
+    this._favorites = [];
   }
 
   public getEntryInstancesByName<T extends TModelType>(
@@ -36,7 +40,7 @@ export class DbService {
   }
   public addEntryInstance<T extends TModelType>(
     entryName: EDBEntryNames,
-    dto,
+    dto: BaseDTO,
   ): T {
     const newInstance = new MODELS[entryName](dto) as T;
 

@@ -68,8 +68,8 @@ export class CommonService {
     id: string,
     cls: typeof BaseDTO,
     DTO: IBaseDTO,
-    updateCallback: (inst: T, dtoInst: BaseDTO) => void,
-  ): Promise<void> {
+    updateCallback: (inst: T, dtoInst: BaseDTO) => T,
+  ): Promise<T> {
     this.validateUUID(id);
 
     const dtoInstance = plainToInstance(cls, DTO);
@@ -86,7 +86,7 @@ export class CommonService {
         if (!instance) {
           throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
         } else {
-          updateCallback(instance, dtoInstance);
+          return updateCallback(instance, dtoInstance);
         }
       }
     });

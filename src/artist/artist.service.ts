@@ -31,6 +31,8 @@ export class ArtistService extends CommonService {
   public async updateArtist(id: string, artistDTO: ICreateArtistDTO) {
     const updateArtistnfo = (artistInstance: Artist, dto: ArtistDTO) => {
       artistInstance.updateArtistInfo(dto);
+
+      return artistInstance;
     };
 
     const updatedArtist = await this.updateInstance(

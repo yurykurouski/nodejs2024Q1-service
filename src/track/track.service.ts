@@ -31,6 +31,8 @@ export class TrackService extends CommonService {
   public async updateTrack(id: string, trackDTO: ICreateTrackDTO) {
     const updateTrackInfo = (trackInstance: Track, dto: TrackDTO) => {
       trackInstance.updateTrackInfo(dto);
+
+      return trackInstance;
     };
 
     const updatedTrack = await this.updateInstance(

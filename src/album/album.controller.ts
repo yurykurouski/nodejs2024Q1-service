@@ -52,6 +52,8 @@ export class AlbumController {
   ) {
     const updateAlbumInfo = (albumInstance: Album, dto: AlbumDTO) => {
       albumInstance.updateAlbumInfo(dto);
+
+      return albumInstance;
     };
 
     const updatedAlbum = await this.albumService.updateInstance(
