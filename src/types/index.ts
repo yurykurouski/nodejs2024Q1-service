@@ -1,3 +1,4 @@
+import { Album } from 'src/models/Album';
 import { Artist } from 'src/models/Artist';
 import { Track } from 'src/models/Track';
 import { User } from 'src/models/User';
@@ -26,14 +27,21 @@ export interface ICreateArtistDTO extends IBaseDTO {
   grammy: boolean;
 }
 
+export interface ICreateAlbumDTO extends IBaseDTO {
+  name: string;
+  year: number;
+  artistId: string;
+}
+
 export enum EDBEntryNames {
   ARTISTS = '_artists',
   USERS = '_users',
   TRACKS = '_tracks',
+  ALBUMS = '_albums',
 }
 
 export type TDTOs = {
   [EDBEntryNames.USERS]: ICreateUserDTO;
 };
 
-export type TModelType = User | Artist | Track;
+export type TModelType = User | Artist | Track | Album;

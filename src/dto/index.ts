@@ -39,3 +39,12 @@ export class ArtistDTO extends BaseDTO {
   @IsBoolean()
   public grammy: string;
 }
+
+export class AlbumDTO extends BaseDTO {
+  @IsString()
+  public name: string;
+  @IsNumber()
+  public year: number;
+  @IsString()
+  public artistId: string;
+}

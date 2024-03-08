@@ -8,6 +8,8 @@ import { TrackController } from './track/track.controller';
 import { TrackService } from './track/track.service';
 import { ArtistController } from './artist/artist.controller';
 import { ArtistService } from './artist/artist.service';
+import { AlbumController } from './album/album.controller';
+import { CommonService } from './common/common.service';
 
 @Module({
   imports: [],
@@ -16,7 +18,15 @@ import { ArtistService } from './artist/artist.service';
     UserController,
     TrackController,
     ArtistController,
+    AlbumController,
   ],
-  providers: [AppService, DbService, UserService, TrackService, ArtistService],
+  providers: [
+    AppService,
+    DbService,
+    UserService,
+    TrackService,
+    ArtistService,
+    CommonService,
+  ],
 })
 export class AppModule {}

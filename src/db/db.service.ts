@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MESSAGES, MODELS } from 'src/constants';
+import { Album } from 'src/models/Album';
 import { Artist } from 'src/models/Artist';
 import { Track } from 'src/models/Track';
 import { User } from 'src/models/User';
@@ -10,11 +11,13 @@ export class DbService {
   private _users: User[];
   private _artists: Artist[];
   private _tracks: Track[];
+  private _albums: Album[];
 
   constructor() {
     this._users = [];
     this._artists = [];
     this._tracks = [];
+    this._albums = [];
   }
 
   public getEntryInstancesByName<T extends TModelType>(
