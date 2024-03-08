@@ -1,24 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { CommonService } from 'src/common/common.service';
 import { MESSAGES } from 'src/constants';
 import { DbService } from 'src/db/db.service';
 import { PwdDataDTO, UserDto } from 'src/dto';
 import { User } from 'src/models/User';
 import { EDBEntryNames, ICreateUserDTO, UpdatePasswordDto } from 'src/types';
-import { isValidUUID } from 'src/utils';
 
 @Injectable()
-export class CommonController {
-  public validateUUID(uuid: string) {
-    if (!isValidUUID(uuid)) {
-      throw new HttpException(MESSAGES.NOT_UUID, HttpStatus.BAD_REQUEST);
-    }
-  }
-}
-
-@Injectable()
-export class UserService extends CommonController {
+export class UserService extends CommonService {
   constructor(private dbService: DbService) {
     super();
   }
