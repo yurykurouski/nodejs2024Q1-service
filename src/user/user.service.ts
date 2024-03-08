@@ -1,93 +1,50 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
+import { Injectable } from '@nestjs/common';
 import { CommonService } from 'src/common/common.service';
-import { MESSAGES } from 'src/constants';
-import { DbService } from 'src/db/db.service';
 import { PwdDataDTO, UserDto } from 'src/dto';
 import { User } from 'src/models/User';
 import { EDBEntryNames, ICreateUserDTO, UpdatePasswordDto } from 'src/types';
 
 @Injectable()
 export class UserService extends CommonService {
-  constructor(private dbService: DbService) {
-    super();
-  }
-
-  public getUsers() {
-    const users = this.dbService.getEntryInstancesByName<User>(
-      EDBEntryNames.USERS,
-    );
+  public async getUsers() {
+    const users = await this.getInstances<User>(EDBEntryNames.USERS);
 
     return users;
   }
 
-  public getUser(id: string) {
-    this.validateUUID(id);
+  public async getUser(id: string) {
+    const user = await this.getInstanceById<User>(EDBEntryNames.USERS, id);
 
-    const userFound = this.dbService.getEntryInstanceById<User>(
-      EDBEntryNames.USERS,
-      id,
-    );
-
-    if (!userFound) {
-      throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
-    } else {
-      return userFound;
-    }
+    return user;
   }
 
   public async createUser(userDTO: ICreateUserDTO) {
-    const user = plainToInstance(UserDto, userDTO);
+    const user = await this.createInstance<User>(
+      EDBEntryNames.USERS,
+      UserDto,
+      userDTO,
+    );
 
-    return validate(user).then((errors) => {
-      if (errors.length) {
-        throw new HttpException(
-          MESSAGES.CANT_VALIDATE_DATA,
-          HttpStatus.BAD_REQUEST,
-        );
-      } else {
-        const newUser = this.dbService.addEntryInstance<User>(
-          EDBEntryNames.USERS,
-          user,
-        );
-
-        return newUser;
-      }
-    });
+    return user;
   }
 
   public async updateUserPwd(id: string, pwdDataDTO: UpdatePasswordDto) {
-    this.validateUUID(id);
+    const updatePwd = (userInstance: User, dto: PwdDataDTO): void => {
+      userInstance.updatePwd(dto);
+    };
 
-    const pwdData = plainToInstance(PwdDataDTO, pwdDataDTO);
+    const updatedUser = await this.updateInstance<User>(
+      EDBEntryNames.USERS,
+      id,
+      PwdDataDTO,
+      pwdDataDTO,
+      updatePwd,
+    );
 
-    return validate(pwdData).then((errors) => {
-      if (errors.length) {
-        throw new HttpException(
-          MESSAGES.CANT_VALIDATE_DATA,
-          HttpStatus.BAD_REQUEST,
-        );
-      } else {
-        const user = this.dbService.getEntryInstanceById<User>(
-          EDBEntryNames.USERS,
-          id,
-        );
-
-        if (!user) {
-          throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
-        } else {
-          user.updatePwd(pwdData);
-
-          return user;
-        }
-      }
-    });
+    return updatedUser;
   }
 
-  public deleteUser(id: string) {
-    this.validateUUID(id);
-
-    return this.dbService.deleteEntryInstance<User>(EDBEntryNames.USERS, id);
+  public async deleteUser(id: string) {
+    return await this.deleteInstance<User>(EDBEntryNames.USERS, id);
   }
 }
