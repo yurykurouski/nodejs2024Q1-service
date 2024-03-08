@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class UserDto {
   @IsString()
@@ -12,4 +12,15 @@ export class PwdDataDTO {
   public oldPassword: string;
   @IsString()
   public newPassword: string;
+}
+
+export class TrackDTO {
+  @IsString()
+  public name: string;
+  @IsNumber()
+  public duration: string;
+  @IsString()
+  public artistId: string;
+  @IsString()
+  public albumId: string;
 }
