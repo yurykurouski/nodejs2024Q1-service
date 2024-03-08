@@ -6,10 +6,17 @@ import { DbService } from './db/db.service';
 import { UserService } from './user/user.service';
 import { TrackController } from './track/track.controller';
 import { TrackService } from './track/track.service';
+import { ArtistController } from './artist/artist.controller';
+import { ArtistService } from './artist/artist.service';
 
 @Module({
   imports: [],
-  controllers: [AppController, UserController, TrackController],
-  providers: [AppService, DbService, UserService, TrackService],
+  controllers: [
+    AppController,
+    UserController,
+    TrackController,
+    ArtistController,
+  ],
+  providers: [AppService, DbService, UserService, TrackService, ArtistService],
 })
 export class AppModule {}

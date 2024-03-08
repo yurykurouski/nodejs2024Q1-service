@@ -21,6 +21,11 @@ export interface UpdatePasswordDto extends IBaseDTO {
   newPassword: string;
 }
 
+export interface ICreateArtistDTO extends IBaseDTO {
+  name: string;
+  grammy: boolean;
+}
+
 export enum EDBEntryNames {
   ARTISTS = '_artists',
   USERS = '_users',

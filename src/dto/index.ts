@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class BaseDTO {
   _type: 'tdo';
@@ -31,4 +31,11 @@ export class TrackDTO extends BaseDTO {
   public artistId: string;
   @IsString()
   public albumId: string;
+}
+
+export class ArtistDTO extends BaseDTO {
+  @IsString()
+  public name: string;
+  @IsBoolean()
+  public grammy: string;
 }
