@@ -9,32 +9,43 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ArtistService } from './artist.service';
-import { ICreateArtistDTO } from 'src/types';
+import { EDBEntryNames, ICreateArtistDTO } from 'src/types';
+import { CommonService } from 'src/common/common.service';
+import { ArtistDTO } from 'src/dto';
+import { Artist } from 'src/models/Artist';
 
 @Controller('artist')
 export class ArtistController {
-  constructor(private artistService: ArtistService) {
+  constructor(private commonService: CommonService) {
     undefined;
   }
 
   @Get()
   public async getArtists() {
-    const artists = await this.artistService.getArtists();
+    const artists = await this.commonService.getInstances(
+      EDBEntryNames.ARTISTS,
+    );
 
     return artists;
   }
 
   @Get('/:id')
   public async getArtistById(@Param('id') id: string) {
-    const artist = this.artistService.getArtist(id);
+    const artist = this.commonService.getInstanceById(
+      EDBEntryNames.ARTISTS,
+      id,
+    );
 
     return artist;
   }
 
   @Post('')
   public async createArtist(@Body() trackDTO: ICreateArtistDTO) {
-    return this.artistService.createArtist(trackDTO);
+    return this.commonService.createInstance(
+      EDBEntryNames.ARTISTS,
+      ArtistDTO,
+      trackDTO,
+    );
   }
 
   @Put('/:id')
@@ -42,12 +53,23 @@ export class ArtistController {
     @Body() artistDTO: ICreateArtistDTO,
     @Param('id') id: string,
   ) {
-    return this.artistService.updateArtist(id, artistDTO);
+    const updateArtistnfo = (artistInstance: Artist, dto: ArtistDTO) => {
+      artistInstance.updateArtistInfo(dto);
+
+      return artistInstance;
+    };
+    return this.commonService.updateInstance(
+      EDBEntryNames.ARTISTS,
+      id,
+      ArtistDTO,
+      artistDTO,
+      updateArtistnfo,
+    );
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteArtist(@Param('id') id: string) {
-    return this.artistService.deleteArtist(id);
+    return this.commonService.deleteInstance(EDBEntryNames.ARTISTS, id);
   }
 }
