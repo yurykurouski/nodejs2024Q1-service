@@ -9,28 +9,34 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { TrackService } from './track.service';
-import { ICreateTrackDTO } from 'src/types';
+import { EDBEntryNames, ICreateTrackDTO } from 'src/types';
+import { CommonService } from 'src/common/common.service';
+import { TrackDTO } from 'src/dto';
+import { Track } from 'src/models/Track';
 
 @Controller('track')
 export class TrackController {
-  constructor(private trackService: TrackService) {
+  constructor(private commonService: CommonService) {
     undefined;
   }
 
   @Get()
   public getTracks() {
-    return this.trackService.getTracks();
+    return this.commonService.getInstances(EDBEntryNames.TRACKS);
   }
 
   @Get('/:id')
   public getTrack(@Param('id') id: string) {
-    return this.trackService.getTrack(id);
+    return this.commonService.getInstanceById(EDBEntryNames.TRACKS, id);
   }
 
   @Post('')
   public async createTrack(@Body() trackDTO: ICreateTrackDTO) {
-    return this.trackService.createTrack(trackDTO);
+    return this.commonService.createInstance(
+      EDBEntryNames.TRACKS,
+      TrackDTO,
+      trackDTO,
+    );
   }
 
   @Put('/:id')
@@ -38,12 +44,23 @@ export class TrackController {
     @Body() trackDTO: ICreateTrackDTO,
     @Param('id') id: string,
   ) {
-    return this.trackService.updateTrack(id, trackDTO);
+    const updateTrackInfo = (trackInstance: Track, dto: TrackDTO) => {
+      trackInstance.updateTrackInfo(dto);
+      return trackInstance;
+    };
+
+    return this.commonService.updateInstance(
+      EDBEntryNames.TRACKS,
+      id,
+      TrackDTO,
+      trackDTO,
+      updateTrackInfo,
+    );
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteTrack(@Param('id') id: string) {
-    return this.trackService.deleteTrack(id);
+    return this.commonService.deleteInstance(EDBEntryNames.TRACKS, id);
   }
 }
