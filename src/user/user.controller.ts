@@ -9,41 +9,74 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ICreateUserDTO, UpdatePasswordDto } from 'src/types';
-import { UserService } from './user.service';
+import { EDBEntryNames, ICreateUserDTO, UpdatePasswordDto } from 'src/types';
+import { CommonService } from 'src/common/common.service';
+import { PwdDataDTO, UserDto } from 'src/dto';
+import { User } from 'src/models/User';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {
+  constructor(private commonService: CommonService) {
     undefined;
   }
 
   @Get()
-  getUsers() {
-    return this.userService.getUsers();
+  public async getUsers() {
+    const users = await this.commonService.getInstances<User>(
+      EDBEntryNames.USERS,
+    );
+
+    return users;
   }
 
   @Get('/:id')
-  async getUser(@Param('id') id: string) {
-    return this.userService.getUser(id);
+  public async getUser(@Param('id') id: string) {
+    const user = await this.commonService.getInstanceById<User>(
+      EDBEntryNames.USERS,
+      id,
+    );
+
+    return user;
   }
 
   @Post('')
-  async createUser(@Body() userDTO: ICreateUserDTO) {
-    return this.userService.createUser(userDTO);
+  public async createUser(@Body() userDTO: ICreateUserDTO) {
+    const newUser = await this.commonService.createInstance<User>(
+      EDBEntryNames.USERS,
+      UserDto,
+      userDTO,
+    );
+
+    return newUser;
   }
 
   @Put('/:id')
-  async updateUserPwd(
+  public async updateUserPwd(
     @Body() pwdDataDTO: UpdatePasswordDto,
     @Param('id') id: string,
   ) {
-    return this.userService.updateUserPwd(id, pwdDataDTO);
+    const updatePwd = (userInstance: User, dto: PwdDataDTO): User => {
+      userInstance.updatePwd(dto);
+      return userInstance;
+    };
+
+    const user = await this.commonService.updateInstance<User>(
+      EDBEntryNames.USERS,
+      id,
+      PwdDataDTO,
+      pwdDataDTO,
+      updatePwd,
+    );
+
+    return user;
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteUser(@Param('id') id: string) {
-    return this.userService.deleteUser(id);
+  public async deleteUser(@Param('id') id: string) {
+    return await this.commonService.deleteInstance<User>(
+      EDBEntryNames.USERS,
+      id,
+    );
   }
 }
