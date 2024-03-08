@@ -3,9 +3,7 @@ import { MESSAGES, MODELS } from 'src/constants';
 import { Artist } from 'src/models/Artist';
 import { Track } from 'src/models/Track';
 import { User } from 'src/models/User';
-import { EDBEntryNames } from 'src/types';
-
-type TModelType = User | Artist | Track;
+import { EDBEntryNames, TModelType } from 'src/types';
 
 @Injectable()
 export class DbService {
