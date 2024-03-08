@@ -1,19 +1,22 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MESSAGES, MODELS } from 'src/constants';
 import { Artist } from 'src/models/Artist';
+import { Track } from 'src/models/Track';
 import { User } from 'src/models/User';
 import { EDBEntryNames } from 'src/types';
 
-type TModelType = User | Artist;
+type TModelType = User | Artist | Track;
 
 @Injectable()
 export class DbService {
   private _users: User[];
   private _artists: Artist[];
+  private _tracks: Track[];
 
   constructor() {
     this._users = [];
     this._artists = [];
+    this._tracks = [];
   }
 
   public getEntryInstancesByName<T extends TModelType>(
