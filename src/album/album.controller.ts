@@ -22,7 +22,7 @@ export class AlbumController {
 
   @Get()
   public async getAlbums() {
-    const albums = await this.albumService.getInstances(EDBEntryNames.TRACKS);
+    const albums = await this.albumService.getInstances(EDBEntryNames.ALBUMS);
 
     return albums;
   }
