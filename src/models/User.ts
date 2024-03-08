@@ -5,29 +5,33 @@ import { MESSAGES } from 'src/constants';
 import { PwdDataDTO } from 'src/dto';
 
 export class User {
-  public id: string;
-  private _login: string;
-  private _password: string;
-  private _version: number;
-  private _createdAt: number;
-  private _updatedAt: number;
+  #password: string;
 
-  constructor(userDTO: ICreateUserDTO) {
+  public id: string;
+  public login: string;
+  public version: number;
+  public createdAt: number;
+  public updatedAt: number;
+
+  constructor({ login, password }: ICreateUserDTO) {
+    this.#password = password;
     this.id = generateUUID();
-    this._login = userDTO.login;
-    this._password = userDTO.password;
-    this._version = 0;
-    this._createdAt = Date.now();
-    this._updatedAt = Date.now();
+    this.login = login;
+    this.version = 0;
+    this.createdAt = Date.now();
+    this.updatedAt = Date.now();
   }
 
   private get password() {
-    return this._password;
+    return this.#password;
+  }
+  private set password(newPwd: string) {
+    this.#password = newPwd;
   }
 
   public updatePwd(pwdData: PwdDataDTO) {
     if (pwdData.oldPassword === this.password) {
-      this._password = pwdData.newPassword;
+      this.password = pwdData.newPassword;
     } else {
       throw new HttpException(MESSAGES.WRONG_DATA, HttpStatus.FORBIDDEN);
     }
