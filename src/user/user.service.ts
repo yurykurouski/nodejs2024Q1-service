@@ -29,8 +29,10 @@ export class UserService extends CommonService {
   }
 
   public async updateUserPwd(id: string, pwdDataDTO: UpdatePasswordDto) {
-    const updatePwd = (userInstance: User, dto: PwdDataDTO): void => {
+    const updatePwd = (userInstance: User, dto: PwdDataDTO): User => {
       userInstance.updatePwd(dto);
+
+      return userInstance;
     };
 
     const updatedUser = await this.updateInstance<User>(

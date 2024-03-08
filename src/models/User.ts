@@ -17,7 +17,7 @@ export class User {
     this.#password = password;
     this.id = generateUUID();
     this.login = login;
-    this.version = 0;
+    this.version = 1;
     this.createdAt = Date.now();
     this.updatedAt = Date.now();
   }
@@ -27,6 +27,12 @@ export class User {
   }
   private set password(newPwd: string) {
     this.#password = newPwd;
+
+    this.handleUpdate();
+  }
+  private handleUpdate() {
+    ++this.version;
+    this.updatedAt = Date.now();
   }
 
   public updatePwd(pwdData: PwdDataDTO) {
