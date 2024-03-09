@@ -1,4 +1,4 @@
-import { ICreateTrackDTO } from 'src/types';
+import { ETrackRefEntry, ICreateTrackDTO } from 'src/types';
 import { generateUUID } from 'src/utils';
 
 export class Track {
@@ -21,5 +21,9 @@ export class Track {
     this.artistId = artistId;
     this.albumId = albumId;
     this.duration = duration;
+  }
+
+  public async clearRefEntry(entryName: ETrackRefEntry) {
+    this[entryName] = null;
   }
 }

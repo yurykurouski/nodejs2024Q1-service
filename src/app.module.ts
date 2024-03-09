@@ -3,13 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user/user.controller';
 import { DbService } from './db/db.service';
-import { UserService } from './user/user.service';
 import { TrackController } from './track/track.controller';
-import { TrackService } from './track/track.service';
 import { ArtistController } from './artist/artist.controller';
-import { ArtistService } from './artist/artist.service';
 import { AlbumController } from './album/album.controller';
 import { CommonService } from './common/common.service';
+import { FavoriteController } from './favorite/favorite.controller';
+import { FavoriteService } from './favorite/favorite.service';
 
 @Module({
   imports: [],
@@ -19,14 +18,8 @@ import { CommonService } from './common/common.service';
     TrackController,
     ArtistController,
     AlbumController,
+    FavoriteController,
   ],
-  providers: [
-    AppService,
-    DbService,
-    UserService,
-    TrackService,
-    ArtistService,
-    CommonService,
-  ],
+  providers: [AppService, DbService, CommonService, FavoriteService],
 })
 export class AppModule {}

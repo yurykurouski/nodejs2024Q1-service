@@ -4,12 +4,13 @@ import { validate } from 'class-validator';
 import { MESSAGES } from 'src/constants';
 import { DbService } from 'src/db/db.service';
 import { BaseDTO } from 'src/dto';
-import { EDBEntryNames, IBaseDTO, TModelType } from 'src/types';
+import { Track } from 'src/models/Track';
+import { EDBEntryNames, ETrackRefEntry, IBaseDTO, TModelType } from 'src/types';
 import { isValidUUID } from 'src/utils';
 
 @Injectable()
 export class CommonService {
-  constructor(private dbService: DbService) {
+  constructor(public dbService: DbService) {
     undefined;
   }
 
@@ -30,13 +31,18 @@ export class CommonService {
   public async getInstanceById<T extends TModelType>(
     name: EDBEntryNames,
     id: string,
+    altErr?: () => never,
   ): Promise<T> {
     this.validateUUID(id);
 
     const instance = this.dbService.getEntryInstanceById<T>(name, id);
 
     if (!instance) {
-      throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
+      if (altErr) {
+        altErr();
+      } else {
+        throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
+      }
     } else {
       return instance;
     }
@@ -56,7 +62,10 @@ export class CommonService {
           HttpStatus.BAD_REQUEST,
         );
       } else {
-        const newInstance = this.dbService.addEntryInstance<T>(name, instance);
+        const newInstance = this.dbService.createEntryInstance<T>(
+          name,
+          instance,
+        );
 
         return newInstance;
       }
@@ -99,5 +108,35 @@ export class CommonService {
     this.validateUUID(id);
 
     return await this.dbService.deleteEntryInstance<T>(name, id);
+  }
+
+  public async addInstance<T extends TModelType>(
+    name: EDBEntryNames,
+    instance: T,
+  ) {
+    return await this.dbService.addInstance(name, instance);
+  }
+
+  public async deleteInstanceWithRef<T extends TModelType>(
+    name: EDBEntryNames,
+    id: string,
+    refEntryName: ETrackRefEntry,
+    targets: EDBEntryNames[],
+  ) {
+    const instance = await this.getInstanceById<T>(name, id);
+
+    targets.forEach(async (target) => {
+      const instanceTrack = this.dbService.getEntryInstanceById<T>(
+        target,
+        instance.id,
+        refEntryName,
+      ) as Track;
+
+      if (instanceTrack) {
+        await instanceTrack.clearRefEntry(refEntryName);
+      }
+    });
+
+    return await this.deleteInstance<T>(name, id);
   }
 }

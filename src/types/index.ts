@@ -34,10 +34,11 @@ export interface ICreateAlbumDTO extends IBaseDTO {
 }
 
 export enum EDBEntryNames {
-  ARTISTS = '_artists',
-  USERS = '_users',
-  TRACKS = '_tracks',
-  ALBUMS = '_albums',
+  ARTISTS = 'artists',
+  USERS = 'users',
+  TRACKS = 'tracks',
+  ALBUMS = 'albums',
+  FAVORITES = 'favorites',
 }
 
 export type TDTOs = {
@@ -45,3 +46,14 @@ export type TDTOs = {
 };
 
 export type TModelType = User | Artist | Track | Album;
+
+export enum EEntityName {
+  TRACK = 'track',
+  ALBUM = 'album',
+  ARTIST = 'artist',
+}
+
+export enum ETrackRefEntry {
+  ARTIST_ID = 'artistId',
+  ALBUM_ID = 'albumId',
+}

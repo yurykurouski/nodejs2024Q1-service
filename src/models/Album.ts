@@ -1,4 +1,4 @@
-import { ICreateAlbumDTO } from 'src/types';
+import { ETrackRefEntry, ICreateAlbumDTO } from 'src/types';
 import { generateUUID } from 'src/utils';
 
 export class Album {
@@ -18,5 +18,9 @@ export class Album {
     this.name = name;
     this.year = year;
     this.artistId = artistId;
+  }
+
+  public async clearRefEntry(entryName: ETrackRefEntry) {
+    this[entryName] = null;
   }
 }

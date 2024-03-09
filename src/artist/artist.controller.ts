@@ -9,10 +9,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { EDBEntryNames, ICreateArtistDTO } from 'src/types';
-import { CommonService } from 'src/common/common.service';
+import { EDBEntryNames, ETrackRefEntry, ICreateArtistDTO } from 'src/types';
 import { ArtistDTO } from 'src/dto';
 import { Artist } from 'src/models/Artist';
+import { CommonService } from 'src/common/common.service';
 
 @Controller('artist')
 export class ArtistController {
@@ -69,7 +69,12 @@ export class ArtistController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteArtist(@Param('id') id: string) {
-    return this.commonService.deleteInstance(EDBEntryNames.ARTISTS, id);
+  public async deleteArtist(@Param('id') id: string) {
+    return await this.commonService.deleteInstanceWithRef(
+      EDBEntryNames.ARTISTS,
+      id,
+      ETrackRefEntry.ARTIST_ID,
+      [EDBEntryNames.TRACKS, EDBEntryNames.ALBUMS],
+    );
   }
 }

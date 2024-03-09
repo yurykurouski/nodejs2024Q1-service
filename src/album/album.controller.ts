@@ -9,7 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { EDBEntryNames, ICreateAlbumDTO } from 'src/types';
+import { EDBEntryNames, ETrackRefEntry, ICreateAlbumDTO } from 'src/types';
 import { AlbumDTO } from 'src/dto';
 import { Album } from 'src/models/Album';
 import { CommonService } from 'src/common/common.service';
@@ -70,6 +70,11 @@ export class AlbumController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteAlbum(@Param('id') id: string) {
-    return await this.commonService.deleteInstance(EDBEntryNames.ALBUMS, id);
+    return await this.commonService.deleteInstanceWithRef(
+      EDBEntryNames.ALBUMS,
+      id,
+      ETrackRefEntry.ALBUM_ID,
+      [EDBEntryNames.TRACKS],
+    );
   }
 }

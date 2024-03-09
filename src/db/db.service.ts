@@ -3,25 +3,45 @@ import { MESSAGES, MODELS } from 'src/constants';
 import { BaseDTO } from 'src/dto';
 import { Album } from 'src/models/Album';
 import { Artist } from 'src/models/Artist';
-import { Favorite } from 'src/models/Favorite';
+import { Favorites } from 'src/models/Favorite';
 import { Track } from 'src/models/Track';
 import { User } from 'src/models/User';
 import { EDBEntryNames, TModelType } from 'src/types';
 
 @Injectable()
 export class DbService {
-  private _users: User[];
-  private _artists: Artist[];
-  private _tracks: Track[];
-  private _albums: Album[];
-  private _favorites: Favorite[];
+  private users: User[];
+  private artists: Artist[];
+  private tracks: Track[];
+  private albums: Album[];
+  private _favorites: Favorites;
 
   constructor() {
-    this._users = [];
-    this._artists = [];
-    this._tracks = [];
-    this._albums = [];
-    this._favorites = [];
+    this.users = [];
+    this.artists = [];
+    this.tracks = [];
+    this.albums = [];
+    this._favorites = new Favorites();
+  }
+
+  public get favorites() {
+    return this._favorites;
+  }
+
+  public async getFaforites() {
+    const test1 = Object.entries(this._favorites).reduce(
+      (acc, [entry, favIDs]) => {
+        return {
+          ...acc,
+          [entry]: favIDs.map((id: string) =>
+            this.getEntryInstanceById(entry as EDBEntryNames, id),
+          ),
+        };
+      },
+      {},
+    );
+
+    return test1;
   }
 
   public getEntryInstancesByName<T extends TModelType>(
@@ -30,23 +50,31 @@ export class DbService {
     return this[entryName] as T[];
   }
 
+  public async addInstance<T extends TModelType>(
+    entryName: EDBEntryNames,
+    instance: T,
+  ) {
+    const instances = this[entryName] as T[];
+
+    return instances[instances.push(instance) - 1];
+  }
+
   public getEntryInstanceById<T extends TModelType>(
     entryName: EDBEntryNames,
     id: string,
+    idName = 'id',
   ): T {
     const entries = this[entryName] as T[];
 
-    return entries[entries.findIndex((el) => el.id === id)];
+    return entries[entries.findIndex((el) => el[idName] === id)];
   }
-  public addEntryInstance<T extends TModelType>(
+  public async createEntryInstance<T extends TModelType>(
     entryName: EDBEntryNames,
     dto: BaseDTO,
-  ): T {
+  ): Promise<T> {
     const newInstance = new MODELS[entryName](dto) as T;
 
-    const instances = this[entryName] as T[];
-
-    return instances[instances.push(newInstance) - 1];
+    return await this.addInstance(entryName, newInstance);
   }
   public async deleteEntryInstance<T extends TModelType>(
     entryName: EDBEntryNames,
