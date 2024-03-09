@@ -16,27 +16,27 @@ import { CommonService } from 'src/common/common.service';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private albumService: CommonService) {
+  constructor(private commonService: CommonService) {
     undefined;
   }
 
   @Get()
   public async getAlbums() {
-    const albums = await this.albumService.getInstances(EDBEntryNames.ALBUMS);
+    const albums = await this.commonService.getInstances(EDBEntryNames.ALBUMS);
 
     return albums;
   }
 
   @Get('/:id')
   public async getAlbum(@Param('id') id: string) {
-    const album = this.albumService.getInstanceById(EDBEntryNames.ALBUMS, id);
+    const album = this.commonService.getInstanceById(EDBEntryNames.ALBUMS, id);
 
     return album;
   }
 
   @Post('')
   public async createAlbum(@Body() albumDTO: ICreateAlbumDTO) {
-    const newAlbum = await this.albumService.createInstance(
+    const newAlbum = await this.commonService.createInstance(
       EDBEntryNames.ALBUMS,
       AlbumDTO,
       albumDTO,
@@ -56,7 +56,7 @@ export class AlbumController {
       return albumInstance;
     };
 
-    const updatedAlbum = await this.albumService.updateInstance(
+    const updatedAlbum = await this.commonService.updateInstance(
       EDBEntryNames.ALBUMS,
       id,
       AlbumDTO,
@@ -70,6 +70,6 @@ export class AlbumController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteAlbum(@Param('id') id: string) {
-    return await this.albumService.deleteInstance(EDBEntryNames.ALBUMS, id);
+    return await this.commonService.deleteInstance(EDBEntryNames.ALBUMS, id);
   }
 }
