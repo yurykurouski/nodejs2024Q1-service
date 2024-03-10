@@ -13,8 +13,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { EDBEntryNames, ETrackRefEntry } from 'src/types';
-import { Artist } from 'src/models/Artist';
-import { CommonService } from 'src/common/common.service';
+import { Artist } from 'src/db/models/Artist';
+import { CommonService } from 'src/modules/common/common.service';
 import { CreateArtistDTO } from './dto/create-artist.dto';
 import { UpdateArtistDTO } from './dto/update-artist.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';

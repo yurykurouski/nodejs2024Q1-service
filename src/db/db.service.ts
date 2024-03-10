@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MESSAGES, MODELS } from 'src/constants';
-import { BaseDTO } from 'src/dto';
-import { Album } from 'src/models/Album';
-import { Artist } from 'src/models/Artist';
-import { Favorites } from 'src/models/Favorite';
-import { Track } from 'src/models/Track';
-import { User } from 'src/models/User';
+import { BaseDTO } from 'src/base-dto';
+import { Album } from 'src/db/models/Album';
+import { Artist } from 'src/db/models/Artist';
+import { Favorites } from 'src/db/models/Favorite';
+import { Track } from 'src/db/models/Track';
+import { User } from 'src/db/models/User';
 import { EDBEntryNames, TModelType } from 'src/types';
 
 @Injectable()

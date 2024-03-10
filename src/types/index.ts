@@ -1,7 +1,7 @@
-import { Album } from 'src/models/Album';
-import { Artist } from 'src/models/Artist';
-import { Track } from 'src/models/Track';
-import { User } from 'src/models/User';
+import { Album } from 'src/db/models/Album';
+import { Artist } from 'src/db/models/Artist';
+import { Track } from 'src/db/models/Track';
+import { User } from 'src/db/models/User';
 
 export enum EDBEntryNames {
   ARTISTS = 'artists',

@@ -1,15 +1,14 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user/user.controller';
+import { UserController } from './modules/user/user.controller';
 import { DbService } from './db/db.service';
-import { TrackController } from './track/track.controller';
-import { ArtistController } from './artist/artist.controller';
-import { AlbumController } from './album/album.controller';
-import { CommonService } from './common/common.service';
-import { FavoriteController } from './favorite/favorite.controller';
-import { FavoriteService } from './favorite/favorite.service';
+import { TrackController } from './modules/track/track.controller';
+import { ArtistController } from './modules/artist/artist.controller';
+import { AlbumController } from './modules/album/album.controller';
+import { CommonService } from './modules/common/common.service';
+import { FavoriteController } from './modules/favorite/favorite.controller';
+import { FavoriteService } from './modules/favorite/favorite.service';
 
 @Module({
-  imports: [],
   controllers: [
     UserController,
     TrackController,

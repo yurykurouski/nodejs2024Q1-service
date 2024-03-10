@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CommonService } from 'src/common/common.service';
+import { CommonService } from 'src/modules/common/common.service';
 import { MESSAGES } from 'src/constants';
 import { EDBEntryNames, EEntityName } from 'src/types';
 

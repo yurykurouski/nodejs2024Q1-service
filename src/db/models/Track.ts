@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateTrackDTO } from 'src/track/dto/create-track.dto';
-import { UpdateTrackDTO } from 'src/track/dto/update-track.dto';
+import { CreateTrackDTO } from 'src/modules/track/dto/create-track.dto';
+import { UpdateTrackDTO } from 'src/modules/track/dto/update-track.dto';
 import { ETrackRefEntry } from 'src/types';
 import { generateUUID } from 'src/utils';
 

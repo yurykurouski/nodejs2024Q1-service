@@ -13,8 +13,8 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { EDBEntryNames, ETrackRefEntry } from 'src/types';
-import { Album } from 'src/models/Album';
-import { CommonService } from 'src/common/common.service';
+import { Album } from 'src/db/models/Album';
+import { CommonService } from 'src/modules/common/common.service';
 import { CreateAlbumDTO } from './dto/create-album.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 

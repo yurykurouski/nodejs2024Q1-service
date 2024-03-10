@@ -13,8 +13,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { EDBEntryNames } from 'src/types';
-import { CommonService } from 'src/common/common.service';
-import { User } from 'src/models/User';
+import { CommonService } from 'src/modules/common/common.service';
+import { User } from 'src/db/models/User';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserPasswordDTO } from './dto/update-user-password.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';

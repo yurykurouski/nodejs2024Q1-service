@@ -13,7 +13,7 @@ import { EEntityName } from 'src/types';
 import { FavoriteService } from './favorite.service';
 import { MESSAGES } from 'src/constants';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Favorites } from 'src/models/Favorite';
+import { Favorites } from 'src/db/models/Favorite';
 
 const whitelist = [EEntityName.TRACK, EEntityName.ALBUM, EEntityName.ARTIST];
 

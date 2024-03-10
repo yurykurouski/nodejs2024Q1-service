@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { generateUUID } from '../utils';
+import { generateUUID } from '../../utils';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { MESSAGES } from 'src/constants';
-import { CreateUserDTO } from 'src/user/dto/create-user.dto';
-import { UpdateUserPasswordDTO } from 'src/user/dto/update-user-password.dto';
+import { CreateUserDTO } from 'src/modules/user/dto/create-user.dto';
+import { UpdateUserPasswordDTO } from 'src/modules/user/dto/update-user-password.dto';
 
 export class User {
   #password: string;

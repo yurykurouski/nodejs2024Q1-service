@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateAlbumDTO } from 'src/album/dto/create-album.dto';
+import { CreateAlbumDTO } from 'src/modules/album/dto/create-album.dto';
 import { ETrackRefEntry } from 'src/types';
 import { generateUUID } from 'src/utils';
 

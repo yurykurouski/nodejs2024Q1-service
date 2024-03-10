@@ -13,8 +13,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { EDBEntryNames } from 'src/types';
-import { CommonService } from 'src/common/common.service';
-import { Track } from 'src/models/Track';
+import { CommonService } from 'src/modules/common/common.service';
+import { Track } from 'src/db/models/Track';
 import { CreateTrackDTO } from './dto/create-track.dto';
 import { UpdateTrackDTO } from './dto/update-track.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';

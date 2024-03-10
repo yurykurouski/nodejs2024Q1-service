@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateArtistDTO } from 'src/artist/dto/create-artist.dto';
-import { UpdateArtistDTO } from 'src/artist/dto/update-artist.dto';
+import { CreateArtistDTO } from 'src/modules/artist/dto/create-artist.dto';
+import { UpdateArtistDTO } from 'src/modules/artist/dto/update-artist.dto';
 import { generateUUID } from 'src/utils';
 
 export class Artist {
