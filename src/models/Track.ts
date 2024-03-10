@@ -1,14 +1,22 @@
-import { ETrackRefEntry, ICreateTrackDTO } from 'src/types';
+import { ApiProperty } from '@nestjs/swagger';
+import { CreateTrackDTO } from 'src/track/dto/create-track.dto';
+import { UpdateTrackDTO } from 'src/track/dto/update-track.dto';
+import { ETrackRefEntry } from 'src/types';
 import { generateUUID } from 'src/utils';
 
 export class Track {
+  @ApiProperty()
   public id: string;
+  @ApiProperty()
   public name: string;
+  @ApiProperty()
   public artistId: string | null;
+  @ApiProperty()
   public albumId: string | null;
-  public duration: number;
+  @ApiProperty()
+  public duration: string;
 
-  constructor({ name, artistId, albumId, duration }: ICreateTrackDTO) {
+  constructor({ name, artistId, albumId, duration }: CreateTrackDTO) {
     this.id = generateUUID();
     this.name = name;
     this.artistId = artistId;
@@ -16,7 +24,12 @@ export class Track {
     this.duration = duration;
   }
 
-  public updateTrackInfo({ name, artistId, albumId, duration }) {
+  public updateTrackInfo({
+    name,
+    artistId,
+    albumId,
+    duration,
+  }: UpdateTrackDTO) {
     this.name = name;
     this.artistId = artistId;
     this.albumId = albumId;

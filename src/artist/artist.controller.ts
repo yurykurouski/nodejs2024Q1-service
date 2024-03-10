@@ -9,18 +9,28 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { EDBEntryNames, ETrackRefEntry, ICreateArtistDTO } from 'src/types';
-import { ArtistDTO } from 'src/dto';
+import { EDBEntryNames, ETrackRefEntry } from 'src/types';
 import { Artist } from 'src/models/Artist';
 import { CommonService } from 'src/common/common.service';
+import { CreateArtistDTO } from './dto/create-artist.dto';
+import { UpdateArtistDTO } from './dto/update-artist.dto';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Artist')
 @Controller('artist')
 export class ArtistController {
   constructor(private commonService: CommonService) {
     undefined;
   }
 
+  @ApiOkResponse({
+    description: 'Get all artists',
+    type: Artist,
+    isArray: true,
+  })
   @Get()
   public async getArtists() {
     const artists = await this.commonService.getInstances(
@@ -29,10 +39,14 @@ export class ArtistController {
 
     return artists;
   }
-
+  @ApiOkResponse({
+    description: 'Get single artist by id',
+    type: Artist,
+    isArray: false,
+  })
   @Get('/:id')
   public async getArtistById(@Param('id', ParseUUIDPipe) id: string) {
-    const artist = this.commonService.getInstanceById(
+    const artist = this.commonService.getInstanceById<Artist>(
       EDBEntryNames.ARTISTS,
       id,
     );
@@ -40,21 +54,32 @@ export class ArtistController {
     return artist;
   }
 
+  @ApiOkResponse({
+    description: 'Create new artist',
+    type: Artist,
+    isArray: false,
+  })
+  @UsePipes(new ValidationPipe())
   @Post('')
-  public async createArtist(@Body() trackDTO: ICreateArtistDTO) {
-    return this.commonService.createInstance(
+  public async createArtist(@Body() artistDTO: CreateArtistDTO) {
+    return this.commonService.createInstance<Artist>(
       EDBEntryNames.ARTISTS,
-      ArtistDTO,
-      trackDTO,
+      artistDTO,
     );
   }
 
+  @ApiOkResponse({
+    description: 'Update artist info',
+    type: Artist,
+    isArray: false,
+  })
+  @UsePipes(new ValidationPipe())
   @Put('/:id')
   async updateArtistInfo(
-    @Body() artistDTO: ICreateArtistDTO,
+    @Body() artistDTO: UpdateArtistDTO,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    const updateArtistnfo = (artistInstance: Artist, dto: ArtistDTO) => {
+    const updateArtistnfo = (artistInstance: Artist, dto: UpdateArtistDTO) => {
       artistInstance.updateArtistInfo(dto);
 
       return artistInstance;
@@ -62,12 +87,16 @@ export class ArtistController {
     return this.commonService.updateInstance(
       EDBEntryNames.ARTISTS,
       id,
-      ArtistDTO,
       artistDTO,
       updateArtistnfo,
     );
   }
 
+  @ApiOkResponse({
+    description: 'Delete artist',
+    type: null,
+    isArray: false,
+  })
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteArtist(@Param('id', ParseUUIDPipe) id: string) {

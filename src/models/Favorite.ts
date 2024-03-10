@@ -1,10 +1,14 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 import { MESSAGES } from 'src/constants';
 import { EDBEntryNames } from 'src/types';
 
 export class Favorites {
+  @ApiProperty()
   public artists: string[];
+  @ApiProperty()
   public albums: string[];
+  @ApiProperty()
   public tracks: string[];
 
   constructor() {

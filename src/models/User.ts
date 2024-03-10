@@ -1,19 +1,25 @@
-import { ICreateUserDTO } from 'src/types';
+import { ApiProperty } from '@nestjs/swagger';
 import { generateUUID } from '../utils';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { MESSAGES } from 'src/constants';
-import { PwdDataDTO } from 'src/dto';
+import { CreateUserDTO } from 'src/user/dto/create-user.dto';
+import { UpdateUserPasswordDTO } from 'src/user/dto/update-user-password.dto';
 
 export class User {
   #password: string;
 
+  @ApiProperty()
   public id: string;
+  @ApiProperty()
   public login: string;
+  @ApiProperty()
   public version: number;
+  @ApiProperty()
   public createdAt: number;
+  @ApiProperty()
   public updatedAt: number;
 
-  constructor({ login, password }: ICreateUserDTO) {
+  constructor({ login, password }: CreateUserDTO) {
     this.#password = password;
     this.id = generateUUID();
     this.login = login;
@@ -35,7 +41,7 @@ export class User {
     this.updatedAt = Date.now();
   }
 
-  public updatePwd(pwdData: PwdDataDTO) {
+  public updatePwd(pwdData: UpdateUserPasswordDTO) {
     if (pwdData.oldPassword === this.password) {
       this.password = pwdData.newPassword;
     } else {

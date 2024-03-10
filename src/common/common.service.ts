@@ -1,11 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
 import { MESSAGES } from 'src/constants';
 import { DbService } from 'src/db/db.service';
 import { BaseDTO } from 'src/dto';
 import { Track } from 'src/models/Track';
-import { EDBEntryNames, ETrackRefEntry, IBaseDTO, TModelType } from 'src/types';
+import { EDBEntryNames, ETrackRefEntry, TModelType } from 'src/types';
 
 @Injectable()
 export class CommonService {
@@ -41,53 +39,26 @@ export class CommonService {
 
   public async createInstance<T extends TModelType>(
     name: EDBEntryNames,
-    cls: typeof BaseDTO,
-    DTO: IBaseDTO,
+    DTO: BaseDTO,
   ): Promise<T> {
-    const instance = plainToInstance(cls, DTO);
+    const newInstance = this.dbService.createEntryInstance<T>(name, DTO);
 
-    return validate(instance).then((errors) => {
-      if (errors.length) {
-        throw new HttpException(
-          MESSAGES.CANT_VALIDATE_DATA,
-          HttpStatus.BAD_REQUEST,
-        );
-      } else {
-        const newInstance = this.dbService.createEntryInstance<T>(
-          name,
-          instance,
-        );
-
-        return newInstance;
-      }
-    });
+    return newInstance;
   }
 
   public async updateInstance<T extends TModelType>(
     name: EDBEntryNames,
     id: string,
-    cls: typeof BaseDTO,
-    DTO: IBaseDTO,
+    DTO: BaseDTO,
     updateCallback: (inst: T, dtoInst: BaseDTO) => T,
   ): Promise<T> {
-    const dtoInstance = plainToInstance(cls, DTO);
+    const instance = this.dbService.getEntryInstanceById<T>(name, id);
 
-    return validate(dtoInstance).then((errors) => {
-      if (errors.length) {
-        throw new HttpException(
-          MESSAGES.CANT_VALIDATE_DATA,
-          HttpStatus.BAD_REQUEST,
-        );
-      } else {
-        const instance = this.dbService.getEntryInstanceById<T>(name, id);
-
-        if (!instance) {
-          throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
-        } else {
-          return updateCallback(instance, dtoInstance);
-        }
-      }
-    });
+    if (!instance) {
+      throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
+    } else {
+      return updateCallback(instance, DTO);
+    }
   }
 
   public async deleteInstance<T extends TModelType>(
