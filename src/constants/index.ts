@@ -1,7 +1,7 @@
-import { Album } from 'src/db/models/Album';
-import { Artist } from 'src/db/models/Artist';
-import { Track } from 'src/db/models/Track';
-import { User } from 'src/db/models/User';
+import { AlbumEntity } from 'src/modules/album/entities/album.entity';
+import { ArtistEntity } from 'src/modules/artist/entities/artist.entity';
+import { TrackEntity } from 'src/modules/track/entities/track.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { EDBEntryNames } from 'src/types';
 
 export const MESSAGES = {
@@ -12,8 +12,8 @@ export const MESSAGES = {
 };
 
 export const MODELS = {
-  [EDBEntryNames.USERS]: User,
-  [EDBEntryNames.ARTISTS]: Artist,
-  [EDBEntryNames.ALBUMS]: Album,
-  [EDBEntryNames.TRACKS]: Track,
+  [EDBEntryNames.USERS]: UserEntity,
+  [EDBEntryNames.ARTISTS]: ArtistEntity,
+  [EDBEntryNames.ALBUMS]: AlbumEntity,
+  [EDBEntryNames.TRACKS]: TrackEntity,
 };

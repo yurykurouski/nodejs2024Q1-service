@@ -13,12 +13,12 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { EDBEntryNames, ETrackRefEntry } from 'src/types';
-import { Album } from 'src/db/models/Album';
+import { AlbumEntity } from 'src/modules/album/entities/album.entity';
 import { CommonService } from 'src/modules/common/common.service';
 import { CreateAlbumDTO } from './dto/create-album.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Albums')
+@ApiTags('Album')
 @Controller('album')
 export class AlbumController {
   constructor(private commonService: CommonService) {
@@ -28,7 +28,7 @@ export class AlbumController {
   @Get()
   @ApiOkResponse({
     description: 'Get all albums',
-    type: Album,
+    type: AlbumEntity,
     isArray: true,
   })
   public async getAlbums() {
@@ -39,7 +39,7 @@ export class AlbumController {
 
   @ApiOkResponse({
     description: 'Get single album by id',
-    type: Album,
+    type: AlbumEntity,
     isArray: false,
   })
   @Get('/:id')
@@ -51,13 +51,13 @@ export class AlbumController {
 
   @ApiOkResponse({
     description: 'Create new album',
-    type: Album,
+    type: AlbumEntity,
     isArray: false,
   })
   @UsePipes(new ValidationPipe())
   @Post('')
   public async createAlbum(@Body() albumDTO: CreateAlbumDTO) {
-    const newAlbum = await this.commonService.createInstance<Album>(
+    const newAlbum = await this.commonService.createInstance<AlbumEntity>(
       EDBEntryNames.ALBUMS,
       albumDTO,
     );
@@ -67,7 +67,7 @@ export class AlbumController {
 
   @ApiOkResponse({
     description: 'Update album info',
-    type: Album,
+    type: AlbumEntity,
     isArray: false,
   })
   @UsePipes(new ValidationPipe())
@@ -76,7 +76,10 @@ export class AlbumController {
     @Body() albumDTO: CreateAlbumDTO,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    const updateAlbumInfo = (albumInstance: Album, dto: CreateAlbumDTO) => {
+    const updateAlbumInfo = (
+      albumInstance: AlbumEntity,
+      dto: CreateAlbumDTO,
+    ) => {
       albumInstance.updateAlbumInfo(dto);
 
       return albumInstance;

@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { MESSAGES } from 'src/constants';
 import { EDBEntryNames } from 'src/types';
 
-export class Favorites {
+export class FavoritesEntity {
   @ApiProperty()
   public artists: string[];
   @ApiProperty()

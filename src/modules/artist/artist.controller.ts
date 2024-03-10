@@ -13,7 +13,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { EDBEntryNames, ETrackRefEntry } from 'src/types';
-import { Artist } from 'src/db/models/Artist';
+import { ArtistEntity } from 'src/modules/artist/entities/artist.entity';
 import { CommonService } from 'src/modules/common/common.service';
 import { CreateArtistDTO } from './dto/create-artist.dto';
 import { UpdateArtistDTO } from './dto/update-artist.dto';
@@ -28,7 +28,7 @@ export class ArtistController {
 
   @ApiOkResponse({
     description: 'Get all artists',
-    type: Artist,
+    type: ArtistEntity,
     isArray: true,
   })
   @Get()
@@ -41,12 +41,12 @@ export class ArtistController {
   }
   @ApiOkResponse({
     description: 'Get single artist by id',
-    type: Artist,
+    type: ArtistEntity,
     isArray: false,
   })
   @Get('/:id')
   public async getArtistById(@Param('id', ParseUUIDPipe) id: string) {
-    const artist = this.commonService.getInstanceById<Artist>(
+    const artist = this.commonService.getInstanceById<ArtistEntity>(
       EDBEntryNames.ARTISTS,
       id,
     );
@@ -56,13 +56,13 @@ export class ArtistController {
 
   @ApiOkResponse({
     description: 'Create new artist',
-    type: Artist,
+    type: ArtistEntity,
     isArray: false,
   })
   @UsePipes(new ValidationPipe())
   @Post('')
   public async createArtist(@Body() artistDTO: CreateArtistDTO) {
-    return this.commonService.createInstance<Artist>(
+    return this.commonService.createInstance<ArtistEntity>(
       EDBEntryNames.ARTISTS,
       artistDTO,
     );
@@ -70,7 +70,7 @@ export class ArtistController {
 
   @ApiOkResponse({
     description: 'Update artist info',
-    type: Artist,
+    type: ArtistEntity,
     isArray: false,
   })
   @UsePipes(new ValidationPipe())
@@ -79,7 +79,10 @@ export class ArtistController {
     @Body() artistDTO: UpdateArtistDTO,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    const updateArtistnfo = (artistInstance: Artist, dto: UpdateArtistDTO) => {
+    const updateArtistnfo = (
+      artistInstance: ArtistEntity,
+      dto: UpdateArtistDTO,
+    ) => {
       artistInstance.updateArtistInfo(dto);
 
       return artistInstance;

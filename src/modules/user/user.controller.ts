@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -9,17 +10,19 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { EDBEntryNames } from 'src/types';
 import { CommonService } from 'src/modules/common/common.service';
-import { User } from 'src/db/models/User';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserPasswordDTO } from './dto/update-user-password.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private commonService: CommonService) {
@@ -28,12 +31,12 @@ export class UserController {
 
   @ApiOkResponse({
     description: 'Get all users',
-    type: User,
+    type: UserEntity,
     isArray: true,
   })
   @Get()
   public async getUsers() {
-    const users = await this.commonService.getInstances<User>(
+    const users = await this.commonService.getInstances<UserEntity>(
       EDBEntryNames.USERS,
     );
 
@@ -42,12 +45,12 @@ export class UserController {
 
   @ApiOkResponse({
     description: 'Get single user by id',
-    type: User,
+    type: UserEntity,
     isArray: false,
   })
   @Get('/:id')
   public async getUser(@Param('id', ParseUUIDPipe) id: string) {
-    const user = await this.commonService.getInstanceById<User>(
+    const user = await this.commonService.getInstanceById<UserEntity>(
       EDBEntryNames.USERS,
       id,
     );
@@ -57,13 +60,13 @@ export class UserController {
 
   @ApiOkResponse({
     description: 'Create user (following DTO should be used) CreateUserDto',
-    type: User,
+    type: UserEntity,
     isArray: false,
   })
   @UsePipes(new ValidationPipe())
   @Post('')
   public async createUser(@Body() userDTO: CreateUserDTO) {
-    const newUser = await this.commonService.createInstance<User>(
+    const newUser = await this.commonService.createInstance<UserEntity>(
       EDBEntryNames.USERS,
       userDTO,
     );
@@ -73,7 +76,7 @@ export class UserController {
 
   @ApiOkResponse({
     description: `Update user's password UpdatePasswordDto (with attributes)`,
-    type: User,
+    type: UserEntity,
     isArray: false,
   })
   @UsePipes(new ValidationPipe())
@@ -83,14 +86,14 @@ export class UserController {
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     const updatePwd = (
-      userInstance: User,
+      userInstance: UserEntity,
       dto: UpdateUserPasswordDTO,
-    ): User => {
+    ): UserEntity => {
       userInstance.updatePwd(dto);
       return userInstance;
     };
 
-    const user = await this.commonService.updateInstance<User>(
+    const user = await this.commonService.updateInstance<UserEntity>(
       EDBEntryNames.USERS,
       id,
       pwdDataDTO,
@@ -108,7 +111,7 @@ export class UserController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.commonService.deleteInstance<User>(
+    return await this.commonService.deleteInstance<UserEntity>(
       EDBEntryNames.USERS,
       id,
     );

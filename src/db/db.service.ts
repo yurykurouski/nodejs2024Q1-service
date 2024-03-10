@@ -1,27 +1,27 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MESSAGES, MODELS } from 'src/constants';
 import { BaseDTO } from 'src/base-dto';
-import { Album } from 'src/db/models/Album';
-import { Artist } from 'src/db/models/Artist';
-import { Favorites } from 'src/db/models/Favorite';
-import { Track } from 'src/db/models/Track';
-import { User } from 'src/db/models/User';
+import { AlbumEntity } from 'src/modules/album/entities/album.entity';
+import { ArtistEntity } from 'src/modules/artist/entities/artist.entity';
+import { FavoritesEntity } from 'src/modules/favorite/entities/favorite.entity';
+import { TrackEntity } from 'src/modules/track/entities/track.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { EDBEntryNames, TModelType } from 'src/types';
 
 @Injectable()
 export class DbService {
-  private users: User[];
-  private artists: Artist[];
-  private tracks: Track[];
-  private albums: Album[];
-  private _favorites: Favorites;
+  private users: UserEntity[];
+  private artists: ArtistEntity[];
+  private tracks: TrackEntity[];
+  private albums: AlbumEntity[];
+  private _favorites: FavoritesEntity;
 
   constructor() {
     this.users = [];
     this.artists = [];
     this.tracks = [];
     this.albums = [];
-    this._favorites = new Favorites();
+    this._favorites = new FavoritesEntity();
   }
 
   public get favorites() {

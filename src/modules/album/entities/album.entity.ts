@@ -3,7 +3,7 @@ import { CreateAlbumDTO } from 'src/modules/album/dto/create-album.dto';
 import { ETrackRefEntry } from 'src/types';
 import { generateUUID } from 'src/utils';
 
-export class Album {
+export class AlbumEntity {
   @ApiProperty()
   public id: string;
   @ApiProperty()

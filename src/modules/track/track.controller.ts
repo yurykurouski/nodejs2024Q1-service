@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { EDBEntryNames } from 'src/types';
 import { CommonService } from 'src/modules/common/common.service';
-import { Track } from 'src/db/models/Track';
+import { TrackEntity } from 'src/modules/track/entities/track.entity';
 import { CreateTrackDTO } from './dto/create-track.dto';
 import { UpdateTrackDTO } from './dto/update-track.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -27,22 +27,24 @@ export class TrackController {
 
   @ApiOkResponse({
     description: 'Get all tracks',
-    type: Track,
+    type: TrackEntity,
     isArray: true,
   })
   @Get()
   public async getTracks() {
-    return await this.commonService.getInstances<Track>(EDBEntryNames.TRACKS);
+    return await this.commonService.getInstances<TrackEntity>(
+      EDBEntryNames.TRACKS,
+    );
   }
 
   @ApiOkResponse({
     description: 'Get single track by id',
-    type: Track,
+    type: TrackEntity,
     isArray: false,
   })
   @Get('/:id')
   public async getTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.commonService.getInstanceById<Track>(
+    return await this.commonService.getInstanceById<TrackEntity>(
       EDBEntryNames.TRACKS,
       id,
     );
@@ -50,13 +52,13 @@ export class TrackController {
 
   @ApiOkResponse({
     description: 'Create new track',
-    type: Track,
+    type: TrackEntity,
     isArray: false,
   })
   @UsePipes(new ValidationPipe())
   @Post('')
   public async createTrack(@Body() trackDTO: CreateTrackDTO) {
-    return this.commonService.createInstance<Track>(
+    return this.commonService.createInstance<TrackEntity>(
       EDBEntryNames.TRACKS,
       trackDTO,
     );
@@ -64,7 +66,7 @@ export class TrackController {
 
   @ApiOkResponse({
     description: 'Update track info',
-    type: Track,
+    type: TrackEntity,
     isArray: false,
   })
   @UsePipes(new ValidationPipe())
@@ -73,7 +75,10 @@ export class TrackController {
     @Body() trackDTO: UpdateTrackDTO,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    const updateTrackInfo = (trackInstance: Track, dto: UpdateTrackDTO) => {
+    const updateTrackInfo = (
+      trackInstance: TrackEntity,
+      dto: UpdateTrackDTO,
+    ) => {
       trackInstance.updateTrackInfo(dto);
       return trackInstance;
     };
@@ -94,7 +99,7 @@ export class TrackController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.commonService.deleteInstance<Track>(
+    return await this.commonService.deleteInstance<TrackEntity>(
       EDBEntryNames.TRACKS,
       id,
     );

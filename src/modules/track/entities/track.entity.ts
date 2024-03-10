@@ -4,7 +4,7 @@ import { UpdateTrackDTO } from 'src/modules/track/dto/update-track.dto';
 import { ETrackRefEntry } from 'src/types';
 import { generateUUID } from 'src/utils';
 
-export class Track {
+export class TrackEntity {
   @ApiProperty()
   public id: string;
   @ApiProperty()

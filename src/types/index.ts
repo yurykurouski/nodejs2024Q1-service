@@ -1,7 +1,7 @@
-import { Album } from 'src/db/models/Album';
-import { Artist } from 'src/db/models/Artist';
-import { Track } from 'src/db/models/Track';
-import { User } from 'src/db/models/User';
+import { AlbumEntity } from 'src/modules/album/entities/album.entity';
+import { ArtistEntity } from 'src/modules/artist/entities/artist.entity';
+import { TrackEntity } from 'src/modules/track/entities/track.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 
 export enum EDBEntryNames {
   ARTISTS = 'artists',
@@ -11,7 +11,7 @@ export enum EDBEntryNames {
   FAVORITES = 'favorites',
 }
 
-export type TModelType = User | Artist | Track | Album;
+export type TModelType = UserEntity | ArtistEntity | TrackEntity | AlbumEntity;
 
 export enum EEntityName {
   TRACK = 'track',
