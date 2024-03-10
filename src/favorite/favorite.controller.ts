@@ -43,7 +43,7 @@ export class FavoriteController {
   @Delete('/:entityName/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async removeFromFavs(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Param('entityName') entityName: EEntityName,
   ) {
     if (whitelist.includes(entityName)) {

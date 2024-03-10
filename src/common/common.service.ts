@@ -6,18 +6,11 @@ import { DbService } from 'src/db/db.service';
 import { BaseDTO } from 'src/dto';
 import { Track } from 'src/models/Track';
 import { EDBEntryNames, ETrackRefEntry, IBaseDTO, TModelType } from 'src/types';
-import { isValidUUID } from 'src/utils';
 
 @Injectable()
 export class CommonService {
   constructor(public dbService: DbService) {
     undefined;
-  }
-
-  public validateUUID(uuid: string) {
-    if (!isValidUUID(uuid)) {
-      throw new HttpException(MESSAGES.NOT_UUID, HttpStatus.BAD_REQUEST);
-    }
   }
 
   public async getInstances<T extends TModelType>(
@@ -33,8 +26,6 @@ export class CommonService {
     id: string,
     altErr?: () => never,
   ): Promise<T> {
-    this.validateUUID(id);
-
     const instance = this.dbService.getEntryInstanceById<T>(name, id);
 
     if (!instance) {
@@ -79,8 +70,6 @@ export class CommonService {
     DTO: IBaseDTO,
     updateCallback: (inst: T, dtoInst: BaseDTO) => T,
   ): Promise<T> {
-    this.validateUUID(id);
-
     const dtoInstance = plainToInstance(cls, DTO);
 
     return validate(dtoInstance).then((errors) => {
@@ -105,8 +94,6 @@ export class CommonService {
     name: EDBEntryNames,
     id: string,
   ): Promise<void> {
-    this.validateUUID(id);
-
     return await this.dbService.deleteEntryInstance<T>(name, id);
   }
 

@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -28,7 +29,7 @@ export class AlbumController {
   }
 
   @Get('/:id')
-  public async getAlbum(@Param('id') id: string) {
+  public async getAlbum(@Param('id', ParseUUIDPipe) id: string) {
     const album = this.commonService.getInstanceById(EDBEntryNames.ALBUMS, id);
 
     return album;
@@ -48,7 +49,7 @@ export class AlbumController {
   @Put('/:id')
   public async updateAlbumInfo(
     @Body() albumDTO: ICreateAlbumDTO,
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     const updateAlbumInfo = (albumInstance: Album, dto: AlbumDTO) => {
       albumInstance.updateAlbumInfo(dto);
@@ -69,7 +70,7 @@ export class AlbumController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async deleteAlbum(@Param('id') id: string) {
+  public async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
     return await this.commonService.deleteInstanceWithRef(
       EDBEntryNames.ALBUMS,
       id,

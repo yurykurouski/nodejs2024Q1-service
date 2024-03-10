@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -30,7 +31,7 @@ export class UserController {
   }
 
   @Get('/:id')
-  public async getUser(@Param('id') id: string) {
+  public async getUser(@Param('id', ParseUUIDPipe) id: string) {
     const user = await this.commonService.getInstanceById<User>(
       EDBEntryNames.USERS,
       id,
@@ -53,7 +54,7 @@ export class UserController {
   @Put('/:id')
   public async updateUserPwd(
     @Body() pwdDataDTO: UpdatePasswordDto,
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     const updatePwd = (userInstance: User, dto: PwdDataDTO): User => {
       userInstance.updatePwd(dto);
@@ -73,7 +74,7 @@ export class UserController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async deleteUser(@Param('id') id: string) {
+  public async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return await this.commonService.deleteInstance<User>(
       EDBEntryNames.USERS,
       id,

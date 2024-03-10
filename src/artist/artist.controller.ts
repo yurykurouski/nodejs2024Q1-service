@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -30,7 +31,7 @@ export class ArtistController {
   }
 
   @Get('/:id')
-  public async getArtistById(@Param('id') id: string) {
+  public async getArtistById(@Param('id', ParseUUIDPipe) id: string) {
     const artist = this.commonService.getInstanceById(
       EDBEntryNames.ARTISTS,
       id,
@@ -51,7 +52,7 @@ export class ArtistController {
   @Put('/:id')
   async updateArtistInfo(
     @Body() artistDTO: ICreateArtistDTO,
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     const updateArtistnfo = (artistInstance: Artist, dto: ArtistDTO) => {
       artistInstance.updateArtistInfo(dto);
@@ -69,7 +70,7 @@ export class ArtistController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async deleteArtist(@Param('id') id: string) {
+  public async deleteArtist(@Param('id', ParseUUIDPipe) id: string) {
     return await this.commonService.deleteInstanceWithRef(
       EDBEntryNames.ARTISTS,
       id,

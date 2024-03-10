@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -26,7 +27,7 @@ export class TrackController {
   }
 
   @Get('/:id')
-  public getTrack(@Param('id') id: string) {
+  public getTrack(@Param('id', ParseUUIDPipe) id: string) {
     return this.commonService.getInstanceById(EDBEntryNames.TRACKS, id);
   }
 
@@ -42,7 +43,7 @@ export class TrackController {
   @Put('/:id')
   async updateTrackInfo(
     @Body() trackDTO: ICreateTrackDTO,
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     const updateTrackInfo = (trackInstance: Track, dto: TrackDTO) => {
       trackInstance.updateTrackInfo(dto);
@@ -60,7 +61,7 @@ export class TrackController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteTrack(@Param('id') id: string) {
+  async deleteTrack(@Param('id', ParseUUIDPipe) id: string) {
     return this.commonService.deleteInstance(EDBEntryNames.TRACKS, id);
   }
 }
