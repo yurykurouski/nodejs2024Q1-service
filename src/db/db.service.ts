@@ -29,19 +29,21 @@ export class DbService {
   }
 
   public async getFaforites() {
-    const test1 = Object.entries(this._favorites).reduce(
-      (acc, [entry, favIDs]) => {
-        return {
-          ...acc,
-          [entry]: favIDs.map((id: string) =>
-            this.getEntryInstanceById(entry as EDBEntryNames, id),
-          ),
-        };
-      },
+    return Object.entries(this.favorites).reduce(
+      (acc, [entry, favIDs]) => ({
+        ...acc,
+        [entry]: favIDs.reduce((acc: TModelType[], id: string) => {
+          const model = this.getEntryInstanceById(entry as EDBEntryNames, id);
+
+          if (model) {
+            acc.push(model);
+          }
+
+          return acc;
+        }, []),
+      }),
       {},
     );
-
-    return test1;
   }
 
   public getEntryInstancesByName<T extends TModelType>(

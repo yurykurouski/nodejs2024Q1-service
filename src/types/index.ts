@@ -41,10 +41,6 @@ export enum EDBEntryNames {
   FAVORITES = 'favorites',
 }
 
-export type TDTOs = {
-  [EDBEntryNames.USERS]: ICreateUserDTO;
-};
-
 export type TModelType = User | Artist | Track | Album;
 
 export enum EEntityName {
