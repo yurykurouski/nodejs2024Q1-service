@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MESSAGES } from 'src/constants';
 import { DbService } from 'src/db/db.service';
-import { BaseDTO } from 'src/base-dto';
 import { TrackEntity } from 'src/modules/track/entities/track.entity';
 import { EDBEntryNames, ETrackRefEntry, TModelType } from 'src/types';
+import { BaseDTO } from './base.dto';
 
 @Injectable()
 export class CommonService {

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString } from 'class-validator';
-import { BaseDTO } from 'src/base-dto';
+import { BaseDTO } from 'src/modules/common/base.dto';
 
 export class CreateArtistDTO extends BaseDTO {
   @IsString()

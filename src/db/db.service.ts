@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MESSAGES, MODELS } from 'src/constants';
-import { BaseDTO } from 'src/base-dto';
 import { AlbumEntity } from 'src/modules/album/entities/album.entity';
 import { ArtistEntity } from 'src/modules/artist/entities/artist.entity';
+import { BaseDTO } from 'src/modules/common/base.dto';
 import { FavoritesEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { TrackEntity } from 'src/modules/track/entities/track.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
