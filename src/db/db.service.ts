@@ -6,7 +6,7 @@ import { BaseDTO } from 'src/modules/shared/base.dto';
 import { FavoritesEntity } from 'src/modules/favorite/entities/favorite.entity';
 import { TrackEntity } from 'src/modules/track/entities/track.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
-import { EDBEntryNames, TModelType } from 'src/types';
+import { EDBEntryNames, TFavoritesMapped, TModelType } from 'src/types';
 
 @Injectable()
 export class DbService {
@@ -28,7 +28,7 @@ export class DbService {
     return this._favorites;
   }
 
-  public async getFaforites() {
+  public async getFaforites(): Promise<TFavoritesMapped> {
     return Object.entries(this.favorites).reduce(
       (acc, [entry, favIDs]) => ({
         ...acc,
@@ -42,7 +42,7 @@ export class DbService {
           return acc;
         }, []),
       }),
-      {},
+      {} as TFavoritesMapped,
     );
   }
 

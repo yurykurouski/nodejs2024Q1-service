@@ -23,3 +23,7 @@ export enum ETrackRefEntry {
   ARTIST_ID = 'artistId',
   ALBUM_ID = 'albumId',
 }
+
+export type TFavoritesMapped = {
+  [key in EDBEntryNames]: TModelType;
+};

@@ -32,7 +32,9 @@ export class AlbumController {
     isArray: true,
   })
   public async getAlbums() {
-    const albums = await this.sharedService.getInstances(EDBEntryNames.ALBUMS);
+    const albums = await this.sharedService.getInstances<AlbumEntity>(
+      EDBEntryNames.ALBUMS,
+    );
 
     return albums;
   }
@@ -44,7 +46,10 @@ export class AlbumController {
   })
   @Get('/:id')
   public async getAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    const album = this.sharedService.getInstanceById(EDBEntryNames.ALBUMS, id);
+    const album = this.sharedService.getInstanceById<AlbumEntity>(
+      EDBEntryNames.ALBUMS,
+      id,
+    );
 
     return album;
   }
@@ -104,7 +109,7 @@ export class AlbumController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.sharedService.deleteInstanceWithRef(
+    return await this.sharedService.deleteInstanceWithRef<AlbumEntity>(
       EDBEntryNames.ALBUMS,
       id,
       ETrackRefEntry.ALBUM_ID,

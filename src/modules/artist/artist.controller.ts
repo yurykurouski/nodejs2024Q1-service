@@ -33,7 +33,7 @@ export class ArtistController {
   })
   @Get()
   public async getArtists() {
-    const artists = await this.sharedService.getInstances(
+    const artists = await this.sharedService.getInstances<ArtistEntity>(
       EDBEntryNames.ARTISTS,
     );
 
@@ -103,7 +103,7 @@ export class ArtistController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.sharedService.deleteInstanceWithRef(
+    return await this.sharedService.deleteInstanceWithRef<ArtistEntity>(
       EDBEntryNames.ARTISTS,
       id,
       ETrackRefEntry.ARTIST_ID,
