@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CommonService } from 'src/modules/common/common.service';
+import { SharedService } from 'src/modules/shared/shared-service/shared.service';
 import { MESSAGES } from 'src/constants';
 import { EDBEntryNames, EEntityName } from 'src/types';
 
@@ -10,10 +10,13 @@ const entriesMap = {
 };
 
 @Injectable()
-export class FavoriteService extends CommonService {
+export class FavoriteService {
+  constructor(private sharedService: SharedService) {}
+
   public async getFavorites() {
-    return await this.dbService.getFaforites();
+    return await this.sharedService.dbService.getFaforites();
   }
+
   public async addToFavs(entityName: EEntityName, id: string) {
     const throwAltErr = () => {
       throw new HttpException(
@@ -22,16 +25,24 @@ export class FavoriteService extends CommonService {
       );
     };
 
-    await this.getInstanceById(entriesMap[entityName], id, throwAltErr).then(
-      async () => {
-        await this.dbService.favorites.addToFavs(entriesMap[entityName], id);
-      },
-    );
+    await this.sharedService
+      .getInstanceById(entriesMap[entityName], id, throwAltErr)
+      .then(async () => {
+        await this.sharedService.dbService.favorites.addToFavs(
+          entriesMap[entityName],
+          id,
+        );
+      });
   }
 
   public async removeFromFavs(entityName: EEntityName, id: string) {
-    await this.getInstanceById(entriesMap[entityName], id).then(async () => {
-      await this.dbService.favorites.removeFromFavs(entriesMap[entityName], id);
-    });
+    await this.sharedService
+      .getInstanceById(entriesMap[entityName], id)
+      .then(async () => {
+        await this.sharedService.dbService.favorites.removeFromFavs(
+          entriesMap[entityName],
+          id,
+        );
+      });
   }
 }

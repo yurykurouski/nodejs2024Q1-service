@@ -14,7 +14,7 @@ export class TrackEntity {
   @ApiProperty()
   public albumId: string | null;
   @ApiProperty()
-  public duration: string;
+  public duration: number;
 
   constructor({ name, artistId, albumId, duration }: CreateTrackDTO) {
     this.id = generateUUID();

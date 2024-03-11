@@ -3,19 +3,16 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
   Param,
+  ParseEnumPipe,
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
 import { EEntityName } from 'src/types';
 import { FavoriteService } from './favorite.service';
-import { MESSAGES } from 'src/constants';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FavoritesEntity } from 'src/modules/favorite/entities/favorite.entity';
-
-const whitelist = [EEntityName.TRACK, EEntityName.ALBUM, EEntityName.ARTIST];
 
 @ApiTags('Favorites')
 @Controller('favs')
@@ -44,13 +41,15 @@ export class FavoriteController {
   @Post('/:entityName/:id')
   public async addToFavs(
     @Param('id', ParseUUIDPipe) id: string,
-    @Param('entityName') entityName: EEntityName,
+    @Param(
+      'entityName',
+      new ParseEnumPipe(EEntityName, {
+        errorHttpStatusCode: HttpStatus.NOT_FOUND,
+      }),
+    )
+    entityName: EEntityName,
   ) {
-    if (whitelist.includes(entityName)) {
-      return this.favoriteService.addToFavs(entityName, id);
-    } else {
-      throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    return this.favoriteService.addToFavs(entityName, id);
   }
 
   @ApiOkResponse({
@@ -63,12 +62,14 @@ export class FavoriteController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async removeFromFavs(
     @Param('id', ParseUUIDPipe) id: string,
-    @Param('entityName') entityName: EEntityName,
+    @Param(
+      'entityName',
+      new ParseEnumPipe(EEntityName, {
+        errorHttpStatusCode: HttpStatus.NOT_FOUND,
+      }),
+    )
+    entityName: EEntityName,
   ) {
-    if (whitelist.includes(entityName)) {
-      return this.favoriteService.removeFromFavs(entityName, id);
-    } else {
-      throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    return this.favoriteService.removeFromFavs(entityName, id);
   }
 }

@@ -13,15 +13,16 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { EDBEntryNames } from 'src/types';
-import { CommonService } from 'src/modules/common/common.service';
+import { SharedService } from 'src/modules/shared/shared-service/shared.service';
 import { TrackEntity } from 'src/modules/track/entities/track.entity';
 import { CreateTrackDTO } from './dto/create-track.dto';
 import { UpdateTrackDTO } from './dto/update-track.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+
 @ApiTags('Track')
 @Controller('track')
 export class TrackController {
-  constructor(private commonService: CommonService) {
+  constructor(private sharedService: SharedService) {
     undefined;
   }
 
@@ -32,7 +33,7 @@ export class TrackController {
   })
   @Get()
   public async getTracks() {
-    return await this.commonService.getInstances<TrackEntity>(
+    return await this.sharedService.getInstances<TrackEntity>(
       EDBEntryNames.TRACKS,
     );
   }
@@ -44,7 +45,7 @@ export class TrackController {
   })
   @Get('/:id')
   public async getTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.commonService.getInstanceById<TrackEntity>(
+    return await this.sharedService.getInstanceById<TrackEntity>(
       EDBEntryNames.TRACKS,
       id,
     );
@@ -58,7 +59,7 @@ export class TrackController {
   @UsePipes(new ValidationPipe())
   @Post('')
   public async createTrack(@Body() trackDTO: CreateTrackDTO) {
-    return this.commonService.createInstance<TrackEntity>(
+    return this.sharedService.createInstance<TrackEntity>(
       EDBEntryNames.TRACKS,
       trackDTO,
     );
@@ -83,7 +84,7 @@ export class TrackController {
       return trackInstance;
     };
 
-    return this.commonService.updateInstance(
+    return this.sharedService.updateInstance(
       EDBEntryNames.TRACKS,
       id,
       trackDTO,
@@ -99,7 +100,7 @@ export class TrackController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.commonService.deleteInstance<TrackEntity>(
+    return await this.sharedService.deleteInstance<TrackEntity>(
       EDBEntryNames.TRACKS,
       id,
     );

@@ -15,7 +15,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { EDBEntryNames } from 'src/types';
-import { CommonService } from 'src/modules/common/common.service';
+import { SharedService } from 'src/modules/shared/shared-service/shared.service';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserPasswordDTO } from './dto/update-user-password.dto';
@@ -25,7 +25,7 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
-  constructor(private commonService: CommonService) {
+  constructor(private shredService: SharedService) {
     undefined;
   }
 
@@ -36,7 +36,7 @@ export class UserController {
   })
   @Get()
   public async getUsers() {
-    const users = await this.commonService.getInstances<UserEntity>(
+    const users = await this.shredService.getInstances<UserEntity>(
       EDBEntryNames.USERS,
     );
 
@@ -50,7 +50,7 @@ export class UserController {
   })
   @Get('/:id')
   public async getUser(@Param('id', ParseUUIDPipe) id: string) {
-    const user = await this.commonService.getInstanceById<UserEntity>(
+    const user = await this.shredService.getInstanceById<UserEntity>(
       EDBEntryNames.USERS,
       id,
     );
@@ -66,7 +66,7 @@ export class UserController {
   @UsePipes(new ValidationPipe())
   @Post('')
   public async createUser(@Body() userDTO: CreateUserDTO) {
-    const newUser = await this.commonService.createInstance<UserEntity>(
+    const newUser = await this.shredService.createInstance<UserEntity>(
       EDBEntryNames.USERS,
       userDTO,
     );
@@ -93,7 +93,7 @@ export class UserController {
       return userInstance;
     };
 
-    const user = await this.commonService.updateInstance<UserEntity>(
+    const user = await this.shredService.updateInstance<UserEntity>(
       EDBEntryNames.USERS,
       id,
       pwdDataDTO,
@@ -111,7 +111,7 @@ export class UserController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.commonService.deleteInstance<UserEntity>(
+    return await this.shredService.deleteInstance<UserEntity>(
       EDBEntryNames.USERS,
       id,
     );

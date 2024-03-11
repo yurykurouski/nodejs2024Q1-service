@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNumber, IsOptional } from 'class-validator';
-import { BaseDTO } from 'src/modules/common/base.dto';
+import { BaseDTO } from 'src/modules/shared/base.dto';
 
 export class CreateTrackDTO extends BaseDTO {
   @IsString()
@@ -8,7 +8,7 @@ export class CreateTrackDTO extends BaseDTO {
   public name: string;
   @IsNumber()
   @ApiProperty()
-  public duration: string;
+  public duration: number;
   @IsString()
   @IsOptional()
   @ApiProperty()

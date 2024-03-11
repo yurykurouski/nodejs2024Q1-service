@@ -1,13 +1,22 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { MESSAGES } from 'src/constants';
 import { DbService } from 'src/db/db.service';
 import { TrackEntity } from 'src/modules/track/entities/track.entity';
 import { EDBEntryNames, ETrackRefEntry, TModelType } from 'src/types';
-import { BaseDTO } from './base.dto';
+import { BaseDTO } from '../base.dto';
 
 @Injectable()
-export class CommonService {
-  constructor(public dbService: DbService) {
+export class SharedService {
+  constructor(
+    @Inject(forwardRef(() => DbService))
+    public readonly dbService: DbService,
+  ) {
     undefined;
   }
 

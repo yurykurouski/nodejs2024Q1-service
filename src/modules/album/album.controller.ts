@@ -14,14 +14,14 @@ import {
 } from '@nestjs/common';
 import { EDBEntryNames, ETrackRefEntry } from 'src/types';
 import { AlbumEntity } from 'src/modules/album/entities/album.entity';
-import { CommonService } from 'src/modules/common/common.service';
+import { SharedService } from 'src/modules/shared/shared-service/shared.service';
 import { CreateAlbumDTO } from './dto/create-album.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Album')
 @Controller('album')
 export class AlbumController {
-  constructor(private commonService: CommonService) {
+  constructor(private sharedService: SharedService) {
     undefined;
   }
 
@@ -32,7 +32,7 @@ export class AlbumController {
     isArray: true,
   })
   public async getAlbums() {
-    const albums = await this.commonService.getInstances(EDBEntryNames.ALBUMS);
+    const albums = await this.sharedService.getInstances(EDBEntryNames.ALBUMS);
 
     return albums;
   }
@@ -44,7 +44,7 @@ export class AlbumController {
   })
   @Get('/:id')
   public async getAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    const album = this.commonService.getInstanceById(EDBEntryNames.ALBUMS, id);
+    const album = this.sharedService.getInstanceById(EDBEntryNames.ALBUMS, id);
 
     return album;
   }
@@ -57,7 +57,7 @@ export class AlbumController {
   @UsePipes(new ValidationPipe())
   @Post('')
   public async createAlbum(@Body() albumDTO: CreateAlbumDTO) {
-    const newAlbum = await this.commonService.createInstance<AlbumEntity>(
+    const newAlbum = await this.sharedService.createInstance<AlbumEntity>(
       EDBEntryNames.ALBUMS,
       albumDTO,
     );
@@ -85,7 +85,7 @@ export class AlbumController {
       return albumInstance;
     };
 
-    const updatedAlbum = await this.commonService.updateInstance(
+    const updatedAlbum = await this.sharedService.updateInstance(
       EDBEntryNames.ALBUMS,
       id,
       albumDTO,
@@ -104,7 +104,7 @@ export class AlbumController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.commonService.deleteInstanceWithRef(
+    return await this.sharedService.deleteInstanceWithRef(
       EDBEntryNames.ALBUMS,
       id,
       ETrackRefEntry.ALBUM_ID,
