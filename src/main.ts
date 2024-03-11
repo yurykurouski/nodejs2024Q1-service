@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ConfigModule } from '@nestjs/config';
+import { writeFile } from 'fs/promises';
 
 ConfigModule.forRoot();
 
@@ -16,6 +17,11 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
+
+  if (process.argv[2] === 'docGen') {
+    //generate docs
+    writeFile('./doc/api.yaml', JSON.stringify(document));
+  }
 
   await app.listen(process.env.PORT || 4000);
 }
