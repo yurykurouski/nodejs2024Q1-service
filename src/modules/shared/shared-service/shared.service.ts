@@ -6,7 +6,7 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { MESSAGES } from 'src/constants';
-import { DbService } from 'src/db/db.service';
+import { DbService } from 'src/modules/db/db.service';
 import { TrackEntity } from 'src/modules/track/entities/track.entity';
 import { EDBEntryNames, ETrackRefEntry, TModelType } from 'src/types';
 import { BaseDTO } from '../base.dto';
