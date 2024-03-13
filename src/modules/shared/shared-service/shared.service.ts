@@ -1,39 +1,29 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  forwardRef,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { MESSAGES } from 'src/constants';
-import { DbService } from 'src/modules/db/db.service';
-import { TrackEntity } from 'src/modules/track/entities/track.entity';
-import { EDBEntryNames, ETrackRefEntry, TModelType } from 'src/types';
+import { EDBEntryName, ETrackRefEntry, TEntityType } from 'src/types';
 import { BaseDTO } from '../base.dto';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 
 @Injectable()
 export class SharedService {
-  constructor(
-    @Inject(forwardRef(() => DbService))
-    public readonly dbService: DbService,
-  ) {
+  constructor(private prisma: PrismaService) {
     undefined;
   }
 
-  public async getInstances<T extends TModelType>(
-    name: EDBEntryNames,
+  public async getInstances<T extends TEntityType>(
+    name: EDBEntryName,
   ): Promise<T[]> {
-    const instances = await this.dbService.getEntryInstancesByName<T>(name);
+    const instances = await this.prisma[name].findMany();
 
-    return instances;
+    return instances as T[];
   }
 
-  public async getInstanceById<T extends TModelType>(
-    name: EDBEntryNames,
+  public async getInstanceById<T extends TEntityType>(
+    name: EDBEntryName,
     id: string,
     altErr?: () => never,
   ): Promise<T> {
-    const instance = this.dbService.getEntryInstanceById<T>(name, id);
+    const instance = await this.prisma[name].findUnique({ where: { id } });
 
     if (!instance) {
       if (altErr) {
@@ -42,68 +32,45 @@ export class SharedService {
         throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
       }
     } else {
-      return instance;
+      return instance as T;
     }
   }
 
-  public async createInstance<T extends TModelType>(
-    name: EDBEntryNames,
-    DTO: BaseDTO,
-  ): Promise<T> {
-    const newInstance = this.dbService.createEntryInstance<T>(name, DTO);
+  public async createInstance<T extends TEntityType>(name: EDBEntryName, data) {
+    const newInstance = this.prisma[name].create({ data });
 
     return newInstance;
   }
 
-  public async updateInstance<T extends TModelType>(
-    name: EDBEntryNames,
+  public async updateInstance<T extends TEntityType>(
+    name: EDBEntryName,
     id: string,
-    DTO: BaseDTO,
-    updateCallback: (inst: T, dtoInst: BaseDTO) => T,
-  ): Promise<T> {
-    const instance = this.dbService.getEntryInstanceById<T>(name, id);
+    data: BaseDTO,
+  ) {
+    try {
+      const instance = await this.prisma[name].update({
+        where: { id },
+        data,
+      });
 
-    if (!instance) {
+      return instance;
+    } catch {
       throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
-    } else {
-      return updateCallback(instance, DTO);
     }
   }
 
-  public async deleteInstance<T extends TModelType>(
-    name: EDBEntryNames,
+  public async deleteInstanceWithRef<T extends TEntityType>(
+    name: EDBEntryName,
     id: string,
-  ): Promise<void> {
-    return await this.dbService.deleteEntryInstance<T>(name, id);
-  }
-
-  public async addInstance<T extends TModelType>(
-    name: EDBEntryNames,
-    instance: T,
+    refEntryName?: ETrackRefEntry,
+    targets?: EDBEntryName[],
   ) {
-    return await this.dbService.addInstance(name, instance);
-  }
+    try {
+      const instance = await this.prisma[name].delete({ where: { id } });
 
-  public async deleteInstanceWithRef<T extends TModelType>(
-    name: EDBEntryNames,
-    id: string,
-    refEntryName: ETrackRefEntry,
-    targets: EDBEntryNames[],
-  ) {
-    const instance = await this.getInstanceById<T>(name, id);
-
-    targets.forEach(async (target) => {
-      const instanceTrack = this.dbService.getEntryInstanceById<T>(
-        target,
-        instance.id,
-        refEntryName,
-      ) as TrackEntity;
-
-      if (instanceTrack) {
-        await instanceTrack.clearRefEntry(refEntryName);
-      }
-    });
-
-    return await this.deleteInstance<T>(name, id);
+      return instance;
+    } catch {
+      throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
   }
 }

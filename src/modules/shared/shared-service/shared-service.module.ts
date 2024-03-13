@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { SharedService } from './shared.service';
-import { DBModule } from 'src/modules/db/db.module';
+import { PrismaModule } from 'src/modules/prisma/prisma.module';
 
 @Module({
-  imports: [DBModule],
+  imports: [PrismaModule],
   exports: [SharedService],
   providers: [SharedService],
 })
