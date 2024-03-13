@@ -20,10 +20,10 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserPasswordDTO } from './dto/update-user-password.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { USerService } from './user.service';
-import { LoggingInterceptor } from './user.interceptor';
+import { UserDataInterceptor } from './user.interceptor';
 
 @Controller('user')
-@UseInterceptors(LoggingInterceptor)
+@UseInterceptors(UserDataInterceptor)
 @ApiTags('User')
 export class UserController {
   constructor(
