@@ -3,15 +3,15 @@ import { ArtistEntity } from 'src/modules/artist/entities/artist.entity';
 import { TrackEntity } from 'src/modules/track/entities/track.entity';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 
-export enum EDBEntryNames {
-  ARTISTS = 'artists',
-  USERS = 'users',
-  TRACKS = 'tracks',
-  ALBUMS = 'albums',
-  FAVORITES = 'favorites',
+export enum EDBEntryName {
+  ARTIST = 'artist',
+  USER = 'user',
+  TRACK = 'track',
+  ALBUM = 'album',
+  FAVORITE = 'favorite',
 }
 
-export type TModelType = UserEntity | ArtistEntity | TrackEntity | AlbumEntity;
+export type TEntityType = AlbumEntity | UserEntity | ArtistEntity | TrackEntity;
 
 export enum EEntityName {
   TRACK = 'track',
@@ -25,5 +25,5 @@ export enum ETrackRefEntry {
 }
 
 export type TFavoritesMapped = {
-  [key in EDBEntryNames]: TModelType;
+  [key in EDBEntryName]: TEntityType;
 };
