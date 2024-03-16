@@ -13,23 +13,18 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { EDBEntryName } from 'src/types';
-import { SharedService } from 'src/modules/shared/shared-service/shared.service';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserPasswordDTO } from './dto/update-user-password.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { USerService } from './user.service';
+import { UserService } from './user.service';
 import { UserDataInterceptor } from './user.interceptor';
 
 @Controller('user')
 @UseInterceptors(UserDataInterceptor)
 @ApiTags('User')
 export class UserController {
-  constructor(
-    private sharedService: SharedService,
-    private userService: USerService,
-  ) {
+  constructor(private userService: UserService) {
     undefined;
   }
 
@@ -40,7 +35,7 @@ export class UserController {
     isArray: true,
   })
   public async getUsers() {
-    return this.sharedService.getInstances(EDBEntryName.USER);
+    return await this.userService.findAll();
   }
 
   @Get('/:id')
@@ -50,7 +45,7 @@ export class UserController {
     isArray: false,
   })
   public async getUser(@Param('id', ParseUUIDPipe) id: string) {
-    return this.sharedService.getInstanceById(EDBEntryName.USER, id);
+    return await this.userService.findOne(id);
   }
 
   @Post('')
@@ -61,10 +56,7 @@ export class UserController {
     isArray: false,
   })
   public async createUser(@Body() userDTO: CreateUserDTO) {
-    return this.sharedService.createInstance<UserEntity>(
-      EDBEntryName.USER,
-      userDTO,
-    );
+    return await this.userService.create(userDTO);
   }
 
   @Put('/:id')
@@ -78,7 +70,7 @@ export class UserController {
     @Body() pwdDataDTO: UpdateUserPasswordDTO,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.userService.updateUserPwd(id, pwdDataDTO);
+    return await this.userService.updateUserPwd(id, pwdDataDTO);
   }
 
   @Delete('/:id')
@@ -89,9 +81,6 @@ export class UserController {
     isArray: false,
   })
   public async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
-    return this.sharedService.deleteInstanceWithRef<UserEntity>(
-      EDBEntryName.USER,
-      id,
-    );
+    return await this.userService.remove(id);
   }
 }

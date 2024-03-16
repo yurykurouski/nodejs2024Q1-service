@@ -12,17 +12,16 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { EDBEntryName, ETrackRefEntry } from 'src/types';
 import { ArtistEntity } from 'src/modules/artist/entities/artist.entity';
-import { SharedService } from 'src/modules/shared/shared-service/shared.service';
 import { CreateArtistDTO } from './dto/create-artist.dto';
 import { UpdateArtistDTO } from './dto/update-artist.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ArtistService } from './artist.service';
 
 @Controller('artist')
 @ApiTags('Artist')
 export class ArtistController {
-  constructor(private sharedService: SharedService) {
+  constructor(private artistService: ArtistService) {
     undefined;
   }
 
@@ -33,11 +32,7 @@ export class ArtistController {
     isArray: true,
   })
   public async getArtists() {
-    const artists = await this.sharedService.getInstances<ArtistEntity>(
-      EDBEntryName.ARTIST,
-    );
-
-    return artists;
+    return await this.artistService.findAll();
   }
 
   @Get('/:id')
@@ -47,10 +42,7 @@ export class ArtistController {
     isArray: false,
   })
   public async getArtistById(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.sharedService.getInstanceById<ArtistEntity>(
-      EDBEntryName.ARTIST,
-      id,
-    );
+    return await this.artistService.findOne(id);
   }
 
   @Post('')
@@ -61,10 +53,7 @@ export class ArtistController {
     isArray: false,
   })
   public async createArtist(@Body() artistDTO: CreateArtistDTO) {
-    return this.sharedService.createInstance<ArtistEntity>(
-      EDBEntryName.ARTIST,
-      artistDTO,
-    );
+    return await this.artistService.create(artistDTO);
   }
 
   @Put('/:id')
@@ -78,11 +67,7 @@ export class ArtistController {
     @Body() artistDTO: UpdateArtistDTO,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.sharedService.updateInstance(
-      EDBEntryName.ARTIST,
-      id,
-      artistDTO,
-    );
+    return await this.artistService.update(id, artistDTO);
   }
 
   @Delete('/:id')
@@ -93,11 +78,6 @@ export class ArtistController {
     isArray: false,
   })
   public async deleteArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.sharedService.deleteInstanceWithRef<ArtistEntity>(
-      EDBEntryName.ARTIST,
-      id,
-      ETrackRefEntry.ARTIST_ID,
-      [EDBEntryName.TRACK, EDBEntryName.ALBUM],
-    );
+    return await this.artistService.remove(id);
   }
 }

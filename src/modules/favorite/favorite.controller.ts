@@ -28,9 +28,7 @@ export class FavoriteController {
   })
   @Get()
   public async getFavorites() {
-    const favorites = await this.favoriteService.getFavorites();
-
-    return favorites;
+    return await this.favoriteService.getFavorites();
   }
 
   @ApiOkResponse({
@@ -49,7 +47,7 @@ export class FavoriteController {
     )
     entityName: EEntityName,
   ) {
-    return this.favoriteService.addToFavs(entityName, id);
+    return await this.favoriteService.addToFavs(entityName, id);
   }
 
   @ApiOkResponse({
@@ -70,6 +68,6 @@ export class FavoriteController {
     )
     entityName: EEntityName,
   ) {
-    return this.favoriteService.removeFromFavs(entityName, id);
+    return await this.favoriteService.removeFromFavs(entityName, id);
   }
 }

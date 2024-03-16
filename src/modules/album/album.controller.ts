@@ -12,16 +12,15 @@ import {
   Put,
   UsePipes,
 } from '@nestjs/common';
-import { EDBEntryName, ETrackRefEntry } from 'src/types';
 import { AlbumEntity } from 'src/modules/album/entities/album.entity';
-import { SharedService } from 'src/modules/shared/shared-service/shared.service';
 import { CreateAlbumDTO } from './dto/create-album.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { AlbumService } from './album.service';
 
 @Controller('album')
 @ApiTags('Album')
 export class AlbumController {
-  constructor(private sharedService: SharedService) {
+  constructor(private albumService: AlbumService) {
     undefined;
   }
 
@@ -32,7 +31,7 @@ export class AlbumController {
     isArray: true,
   })
   public async getAlbums() {
-    return this.sharedService.getInstances<AlbumEntity>(EDBEntryName.ALBUM);
+    return await this.albumService.findAll();
   }
 
   @Get('/:id')
@@ -42,10 +41,7 @@ export class AlbumController {
     isArray: false,
   })
   public async getAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.sharedService.getInstanceById<AlbumEntity>(
-      EDBEntryName.ALBUM,
-      id,
-    );
+    return await this.albumService.findOne(id);
   }
 
   @Post('')
@@ -56,10 +52,7 @@ export class AlbumController {
     isArray: false,
   })
   public async createAlbum(@Body() albumDTO: CreateAlbumDTO) {
-    return this.sharedService.createInstance<AlbumEntity>(
-      EDBEntryName.ALBUM,
-      albumDTO,
-    );
+    return await this.albumService.create(albumDTO);
   }
 
   @Put('/:id')
@@ -72,11 +65,7 @@ export class AlbumController {
     @Body() albumDTO: CreateAlbumDTO,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.sharedService.updateInstance<AlbumEntity>(
-      EDBEntryName.ALBUM,
-      id,
-      albumDTO,
-    );
+    return await this.albumService.update(id, albumDTO);
   }
 
   @Delete('/:id')
@@ -87,11 +76,6 @@ export class AlbumController {
     status: HttpStatus.NO_CONTENT,
   })
   public async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.sharedService.deleteInstanceWithRef<AlbumEntity>(
-      EDBEntryName.ALBUM,
-      id,
-      ETrackRefEntry.ALBUM_ID,
-      [EDBEntryName.TRACK],
-    );
+    return await this.albumService.remove(id);
   }
 }
