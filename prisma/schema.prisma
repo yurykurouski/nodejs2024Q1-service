@@ -50,8 +50,8 @@ model User {
   id        String   @id @default(uuid())
   login     String
   password  String
-  version   Int      @default(autoincrement())
-  createdAt DateTime @default(now()) @updatedAt
+  version   Int      @default(1)
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
