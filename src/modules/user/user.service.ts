@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserPasswordDTO } from './dto/update-user-password.dto';
 import { MESSAGES } from 'src/constants';
-import { UserEntity } from './entities/user.entity';
 import { CreateUserDTO } from './dto/create-user.dto';
 
 @Injectable()
@@ -10,7 +9,7 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   public async findAll() {
-    return (await this.prisma.user.findMany()) as UserEntity[];
+    return await this.prisma.user.findMany();
   }
 
   public async findOne(id: string) {
@@ -19,12 +18,12 @@ export class UserService {
     if (!user) {
       throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
     } else {
-      return user as UserEntity;
+      return user;
     }
   }
 
   public async create(data: CreateUserDTO) {
-    return (await this.prisma.user.create({ data })) as UserEntity;
+    return await this.prisma.user.create({ data });
   }
 
   public async updateUserPwd(id: string, data: UpdateUserPasswordDTO) {
@@ -34,7 +33,7 @@ export class UserService {
       if (user.password === data.oldPassword) {
         return await this.prisma.user.update({
           where: { id },
-          data: { password: data.newPassword },
+          data: { password: data.newPassword, version: { increment: 1 } },
         });
       } else {
         throw new HttpException(MESSAGES.WRONG_DATA, HttpStatus.FORBIDDEN);
@@ -46,7 +45,7 @@ export class UserService {
 
   public async remove(id: string) {
     try {
-      return (await this.prisma.user.delete({ where: { id } })) as UserEntity;
+      return await this.prisma.user.delete({ where: { id } });
     } catch {
       throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
     }

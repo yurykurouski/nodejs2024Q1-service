@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 
 export class UserEntity {
   @ApiProperty()
@@ -10,6 +10,13 @@ export class UserEntity {
   @Exclude()
   password: string;
   version: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: number;
+  updatedAt: number;
+
+  constructor(data: UserEntity) {
+    Object.assign(this, data);
+
+    this.createdAt = new Date(data.createdAt).getTime();
+    this.updatedAt = new Date(data.updatedAt).getTime();
+  }
 }
