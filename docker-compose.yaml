@@ -1,5 +1,6 @@
 services:
   db:
+    image: ymorpheus/nodejs2024q1-service-db
     container_name: 
       $DB_CONTAINER_NAME
     build:
