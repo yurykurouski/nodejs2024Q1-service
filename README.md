@@ -20,11 +20,12 @@ npm install
 ```
 
 ## How to run in Docker:
+- Switch to the branch named `dev_1`
 - Create `.env` file regarding to the `.env.example` file
 - Run `docker compose up`
-- To check for vulnerabilities run `npm run docker:scout`
+- To check for vulnerabilities run `npm run docker:scout` NB!: you have to be registered on [Docker HUB](https://hub.docker.com)
 
-## Build application
+## Build application locally
 
 ```bash
 npm run build

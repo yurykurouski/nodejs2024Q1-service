@@ -2,7 +2,7 @@ services:
   db:
     image: ymorpheus/nodejs2024q1-service-db
     container_name: 
-      $DB_CONTAINER_NAME
+      db
     build:
       dockerfile: ./docker/db.Dockerfile
     networks:
