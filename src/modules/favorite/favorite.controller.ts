@@ -3,42 +3,43 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   ParseEnumPipe,
   ParseUUIDPipe,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { EEntityName } from 'src/types';
 import { FavoriteService } from './favorite.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FavoritesEntity } from 'src/modules/favorite/entities/favorite.entity';
+import { FavoritesInterceptor } from './favorite.interceptor';
 
-@ApiTags('Favorites')
 @Controller('favs')
+@UseInterceptors(FavoritesInterceptor)
+@ApiTags('Favorites')
 export class FavoriteController {
   constructor(private favoriteService: FavoriteService) {
     undefined;
   }
 
+  @Get()
   @ApiOkResponse({
     description: 'get all favorites',
     type: FavoritesEntity,
     isArray: true,
   })
-  @Get()
   public async getFavorites() {
-    const favorites = await this.favoriteService.getFavorites();
-
-    return favorites;
+    return await this.favoriteService.getFavorites();
   }
 
+  @Post('/:entityName/:id')
   @ApiOkResponse({
     description: 'Add entity to the favorites',
     type: null,
-    isArray: false,
   })
-  @Post('/:entityName/:id')
   public async addToFavs(
     @Param('id', ParseUUIDPipe) id: string,
     @Param(
@@ -49,17 +50,17 @@ export class FavoriteController {
     )
     entityName: EEntityName,
   ) {
-    return this.favoriteService.addToFavs(entityName, id);
+    return await this.favoriteService.addToFavs(entityName, id);
   }
 
+  @Delete('/:entityName/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOkResponse({
     description: 'Delete entity from the favorites',
     type: null,
     isArray: false,
     status: HttpStatus.NO_CONTENT,
   })
-  @Delete('/:entityName/:id')
-  @HttpCode(HttpStatus.NO_CONTENT)
   public async removeFromFavs(
     @Param('id', ParseUUIDPipe) id: string,
     @Param(
@@ -70,6 +71,6 @@ export class FavoriteController {
     )
     entityName: EEntityName,
   ) {
-    return this.favoriteService.removeFromFavs(entityName, id);
+    return await this.favoriteService.removeFromFavs(entityName, id);
   }
 }

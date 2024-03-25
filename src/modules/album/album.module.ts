@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AlbumController } from './album.controller';
-import { SharedServiceModule } from '../shared/shared-service/shared-service.module';
+import { AlbumService } from './album.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
-  imports: [SharedServiceModule],
   controllers: [AlbumController],
+  providers: [AlbumService, PrismaService],
 })
 export class AlbumModule {}

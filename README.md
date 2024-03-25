@@ -3,6 +3,7 @@
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
+- Docker - [Download & Install Docker](https://www.docker.com/get-started/).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 - Nest.js - [NestJS Introduction](https://docs.nestjs.com/).
 
@@ -18,7 +19,13 @@ git clone `https://github.com/yurykurouski/nodejs2024Q1-service`
 npm install
 ```
 
-## Build application
+## How to run in Docker:
+- Switch to the branch named `dev_1`
+- Create `.env` file regarding to the `.env.example` file
+- Run `docker compose up`
+- To check for vulnerabilities run `npm run docker:scout` NB!: you have to be registered on [Docker HUB](https://hub.docker.com)
+
+## Build application locally
 
 ```bash
 npm run build

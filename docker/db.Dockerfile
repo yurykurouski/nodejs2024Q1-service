@@ -1,0 +1,1 @@
+FROM ymorpheus/nodejs2024q1-service-db:v.1.0
