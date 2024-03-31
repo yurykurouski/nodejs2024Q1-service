@@ -19,10 +19,6 @@ export class RequestLoggerMiddleware implements NestMiddleware {
       await this.loggingService.log(message);
     });
 
-    res.on('error', async () => {
-      console.log('ERR');
-    });
-
     next();
   }
 }
