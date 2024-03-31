@@ -38,6 +38,9 @@ services:
     environment:
       - PORT=$PORT
       - DATABASE_URL=$DATABASE_URL
+      - LOG_LEVEL=$LOG_LEVEL
+      - LOG_FILE_SIZE=$LOG_FILE_SIZE
+      - LOGS_FOLDER_PATH=$LOGS_FOLDER_PATH
     ports:
       - $PORT:$PORT
     volumes:
