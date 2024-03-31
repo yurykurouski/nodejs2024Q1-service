@@ -3,7 +3,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
   Param,
   ParseEnumPipe,
@@ -21,9 +20,7 @@ import { FavoritesInterceptor } from './favorite.interceptor';
 @UseInterceptors(FavoritesInterceptor)
 @ApiTags('Favorites')
 export class FavoriteController {
-  constructor(private favoriteService: FavoriteService) {
-    undefined;
-  }
+  constructor(private favoriteService: FavoriteService) {}
 
   @Get()
   @ApiOkResponse({
