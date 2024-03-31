@@ -23,10 +23,10 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   app:
-    image: ymorpheus/nodejs2024q1-service-app
+    image: ymorpheus/nodejs2024q1-service-app:v.2.1
     build:
       context: .
-      dockerfile: ./docker/app.Dockerfile
+      dockerfile: Dockerfile
     depends_on:
       db:
         condition: service_started
