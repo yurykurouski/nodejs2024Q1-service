@@ -95,7 +95,7 @@ export class LoggingService extends ConsoleLogger {
     const isFileTooLarge = fileStats?.size > this.maxLogFileSize;
 
     if (isFileTooLarge) {
-      this.switchLogFile(logMsg, isError);
+      await this.switchLogFile(logMsg, isError);
     } else {
       await this.appendFile(filePath, logMsg);
     }
