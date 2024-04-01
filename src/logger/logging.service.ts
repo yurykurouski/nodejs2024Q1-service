@@ -70,8 +70,8 @@ export class LoggingService extends ConsoleLogger {
       : `${this.fileTimeStamp}_log_${this.logFilePostfix}.txt`;
   }
 
-  private createNewLogFile(fileName: PathOrFileDescriptor) {
-    fs.writeFile(fileName, '', this.error);
+  private async createNewLogFile(fileName: PathOrFileDescriptor) {
+    await fs.writeFile(fileName, '', this.error);
   }
 
   private async appendFile(filePath: fs.PathLike, logMsg: string) {
@@ -92,6 +92,7 @@ export class LoggingService extends ConsoleLogger {
       this.error(err);
       return null;
     });
+
     const isFileTooLarge = fileStats?.size > this.maxLogFileSize;
 
     if (isFileTooLarge) {
@@ -129,7 +130,7 @@ export class LoggingService extends ConsoleLogger {
       `${this.fileTimeStamp}_log_${this.logFilePostfix}.txt`,
     );
 
-    this.createNewLogFile(logFileName);
-    this.createNewLogFile(errLogFileName);
+    await this.createNewLogFile(logFileName);
+    await this.createNewLogFile(errLogFileName);
   }
 }

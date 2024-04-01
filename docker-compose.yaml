@@ -23,7 +23,7 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   app:
-    image: ymorpheus/nodejs2024q1-service-app:v.2.2
+    image: ymorpheus/nodejs2024q1-service-app:v.2.4
     build:
       context: .
       dockerfile: Dockerfile
