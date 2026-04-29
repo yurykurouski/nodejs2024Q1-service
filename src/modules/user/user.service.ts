@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserPasswordDTO } from './dto/update-user-password.dto';
 import { MESSAGES } from 'src/constants';
 import { CreateUserDTO } from './dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -22,15 +23,30 @@ export class UserService {
     }
   }
 
+  public async findByLogin(data: CreateUserDTO) {
+    return await this.prisma.user.findFirst({
+      where: { login: data.login },
+    });
+  }
+
   public async create(data: CreateUserDTO) {
-    return await this.prisma.user.create({ data });
+    const hashedPwd = await this.hashPassword(data.password);
+
+    return await this.prisma.user.create({
+      data: {
+        ...data,
+        password: hashedPwd,
+      },
+    });
   }
 
   public async updateUserPwd(id: string, data: UpdateUserPasswordDTO) {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (user) {
-      if (user.password === data.oldPassword) {
+      const isPdwSame = await this.comparePwd(data.oldPassword, user.password);
+
+      if (isPdwSame) {
         return await this.prisma.user.update({
           where: { id },
           data: { password: data.newPassword, version: { increment: 1 } },
@@ -49,5 +65,15 @@ export class UserService {
     } catch {
       throw new HttpException(MESSAGES.NOT_FOUND, HttpStatus.NOT_FOUND);
     }
+  }
+
+  private async hashPassword(password: string) {
+    const salt = await bcrypt.genSalt(parseInt(process.env.CRYPT_SALT));
+
+    return await bcrypt.hash(password, salt);
+  }
+
+  private async comparePwd(data: string, ecrypted: string) {
+    return await bcrypt.compare(data, ecrypted);
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Type } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 
 export class UserEntity {
   @ApiProperty()

@@ -23,10 +23,10 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   app:
-    image: ymorpheus/nodejs2024q1-service-app
+    image: ymorpheus/nodejs2024q1-service-app:v.2.4
     build:
       context: .
-      dockerfile: ./docker/app.Dockerfile
+      dockerfile: Dockerfile
     depends_on:
       db:
         condition: service_started
@@ -38,6 +38,9 @@ services:
     environment:
       - PORT=$PORT
       - DATABASE_URL=$DATABASE_URL
+      - LOG_LEVEL=$LOG_LEVEL
+      - LOG_FILE_SIZE=$LOG_FILE_SIZE
+      - LOGS_FOLDER_PATH=$LOGS_FOLDER_PATH
     ports:
       - $PORT:$PORT
     volumes:

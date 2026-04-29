@@ -1,16 +1,26 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { ConfigModule } from '@nestjs/config';
 import { writeFile } from 'fs/promises';
 import { ClassSerializerInterceptor } from '@nestjs/common';
-
-ConfigModule.forRoot();
+import { LoggingService } from './logger/logging.service';
+import { exceptionHandler } from './helpers/exception.handler';
+import { HttpExceptionFilter } from './helpers/exception.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
 
+  const loggingService = await app.resolve(LoggingService);
+
+  app.useGlobalFilters(new HttpExceptionFilter(loggingService));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  app.useLogger(loggingService);
+  exceptionHandler(loggingService);
+
+  loggingService.initLogFiles();
 
   const config = new DocumentBuilder()
     .setTitle('Assignment: REST Service')
@@ -28,4 +38,5 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 4000);
 }
+
 bootstrap();
